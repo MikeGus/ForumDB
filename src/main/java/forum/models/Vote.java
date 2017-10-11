@@ -18,11 +18,19 @@ public class Vote {
         this.voice = voice;
     }
 
-    public final String getNickname() { return nickname; }
+    public final String getNickname() {
+        return nickname;
+    }
 
-    public final Integer getVoice() { return voice; }
+    public final Integer getVoice() {
+        return voice;
+    }
 
-    public void setNickname(final String nickname) { this.nickname = nickname; }
+    public void setNickname(final String nickname) {
+        this.nickname = nickname;
+    }
 
-    public void setVoice(final Integer voice) { this.voice = voice; }
+    public void setVoice(final Integer voice) {
+        this.voice = voice;
+    }
 }

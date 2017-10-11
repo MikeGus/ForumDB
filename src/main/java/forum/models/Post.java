@@ -96,5 +96,7 @@ public class Post {
         this.parent = parent;
     }
 
-    public void setThread(final Integer thread) { this.thread = thread; }
+    public void setThread(final Integer thread) {
+        this.thread = thread;
+    }
 }

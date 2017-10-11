@@ -36,35 +36,67 @@ public class Thread {
         this.votes = votes;
     }
 
-    public final String getAuthor() { return author; }
+    public final String getAuthor() {
+        return author;
+    }
 
-    public final String getCreated() { return created; }
+    public final String getCreated() {
+        return created;
+    }
 
-    public final String getForum() { return forum; }
+    public final String getForum() {
+        return forum;
+    }
 
-    public final Integer getId() { return id; }
+    public final Integer getId() {
+        return id;
+    }
 
-    public final String getMessage() { return message; }
+    public final String getMessage() {
+        return message;
+    }
 
-    public final String getSlug() { return slug; }
+    public final String getSlug() {
+        return slug;
+    }
 
-    public final String getTitle() { return title; }
+    public final String getTitle() {
+        return title;
+    }
 
-    public final Integer getVotes() { return votes; }
+    public final Integer getVotes() {
+        return votes;
+    }
 
-    public void setAuthor(final String author) { this.author = author; }
+    public void setAuthor(final String author) {
+        this.author = author;
+    }
 
-    public void setCreated(final String created) { this.created = created; }
+    public void setCreated(final String created) {
+        this.created = created;
+    }
 
-    public void setForum(final String forum) { this.forum = forum; }
+    public void setForum(final String forum) {
+        this.forum = forum;
+    }
 
-    public void setId(final Integer id) { this.id = id; }
+    public void setId(final Integer id) {
+        this.id = id;
+    }
 
-    public void setMessage(final String message) { this.message = message; }
+    public void setMessage(final String message) {
+        this.message = message;
+    }
 
-    public void setSlug(final String slug) { this.author = slug; }
+    public void setSlug(final String slug) {
+        this.author = slug;
+    }
 
-    public void setTitle(final String title) { this.title = title; }
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 
-    public void setVotes(final Integer votes) { this.votes = votes; }
+    public void setVotes(final Integer votes) {
+        this.votes = votes;
+    }
 }

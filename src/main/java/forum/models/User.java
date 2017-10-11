@@ -24,19 +24,35 @@ public class User {
         this.nickname = nickname;
     }
 
-    public final String getAbout() { return about; }
+    public final String getAbout() {
+        return about;
+    }
 
-    public final String getEmail() { return email; }
+    public final String getEmail() {
+        return email;
+    }
 
-    public final String getFullname() { return fullname; }
+    public final String getFullname() {
+        return fullname;
+    }
 
-    public final String getNickname() { return nickname; }
+    public final String getNickname() {
+        return nickname;
+    }
 
-    public void setAbout(final String about) { this.about = about; }
+    public void setAbout(final String about) {
+        this.about = about;
+    }
 
-    public void setEmail(final String email) { this.email = email; }
+    public void setEmail(final String email) {
+        this.email = email;
+    }
 
-    public void setFullname(final String fullname) { this.fullname = fullname; }
+    public void setFullname(final String fullname) {
+        this.fullname = fullname;
+    }
 
-    public void setNickname(final String nickname) { this.nickname = nickname; }
+    public void setNickname(final String nickname) {
+        this.nickname = nickname;
+    }
 }

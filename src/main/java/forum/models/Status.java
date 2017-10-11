@@ -24,19 +24,35 @@ public class Status {
         this.user = user;
     }
 
-    public final Integer getForum() { return forum; }
+    public final Integer getForum() {
+        return forum;
+    }
 
-    public final Integer getPost() { return post; }
+    public final Integer getPost() {
+        return post;
+    }
 
-    public final Integer getThread() { return thread; }
+    public final Integer getThread() {
+        return thread;
+    }
 
-    public final Integer getUser() { return user; }
+    public final Integer getUser() {
+        return user;
+    }
 
-    public void setForum(final Integer forum) { this.forum = forum; }
+    public void setForum(final Integer forum) {
+        this.forum = forum;
+    }
 
-    public void setPost(final Integer post) { this.post = post; }
+    public void setPost(final Integer post) {
+        this.post = post;
+    }
 
-    public void setThread(final Integer thread) { this.thread = thread; }
+    public void setThread(final Integer thread) {
+        this.thread = thread;
+    }
 
-    public void setUser(final Integer user) { this.user = user; }
+    public void setUser(final Integer user) {
+        this.user = user;
+    }
 }

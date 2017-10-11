@@ -24,11 +24,19 @@ public class PostFull {
         this.thread = thread;
     }
 
-    public User getAuthor() { return author; }
+    public User getAuthor() {
+        return author;
+    }
 
-    public Forum getForum() { return forum; }
+    public Forum getForum() {
+        return forum;
+    }
 
-    public Post getPost() { return post; }
+    public Post getPost() {
+        return post;
+    }
 
-    public Thread getThread() { return thread; }
+    public Thread getThread() {
+        return thread;
+    }
 }
