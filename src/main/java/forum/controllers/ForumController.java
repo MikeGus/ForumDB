@@ -38,12 +38,18 @@ public class ForumController {
     }
 
     @RequestMapping(value = "{slug}/threads", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Thread>> getThreads(@PathVariable(value = "slug") final String slug) {
+    public ResponseEntity<List<Thread>> getThreads(@PathVariable(value = "slug") final String slug,
+                                                   @RequestParam(value = "limit") final Integer limit,
+                                                   @RequestParam(value = "since") final String since,
+                                                   @RequestParam(value = "desc") final Boolean desc) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @RequestMapping(value = "{slug}/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getUsers(@PathVariable(value = "slug") final String slug) {
+    public ResponseEntity<List<User>> getUsers(@PathVariable(value = "slug") final String slug,
+                                               @RequestParam(value = "limit") final Integer limit,
+                                               @RequestParam(value = "since") final String since,
+                                               @RequestParam(value = "desc") final Boolean desc) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
