@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by MikeGus on 12.10.17
  */
 
+@RestController
 @RequestMapping("api/post")
 public class PostController {
 

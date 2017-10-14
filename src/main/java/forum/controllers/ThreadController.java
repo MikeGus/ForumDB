@@ -15,6 +15,7 @@ import java.util.List;
  * Created by MikeGus on 14.10.17
  */
 
+@RestController
 @RequestMapping("api/thread")
 public class ThreadController {
 
