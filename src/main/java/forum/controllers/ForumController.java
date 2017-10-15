@@ -1,9 +1,13 @@
 package forum.controllers;
 
+import forum.Jdbc.JdbcForum;
+import forum.models.ErrorModel;
 import forum.models.ForumModel;
 import forum.models.ThreadModel;
 import forum.models.UserModel;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +23,19 @@ import java.util.List;
 @RequestMapping(value="api/forum")
 public class ForumController {
 
+    private JdbcForum jdbcForum;
+
     @RequestMapping(value="create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ForumModel> createForum(@RequestBody final ForumModel forum) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    public ResponseEntity<Object> createForum(@RequestBody final ForumModel forum) {
+        try {
+            jdbcForum.create(forum);
+        } catch (DuplicateKeyException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(jdbcForum.getBySlug(forum.getSlug()));
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel("Owner not found"));
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(jdbcForum.getBySlug(forum.getSlug()));
     }
 
     @RequestMapping(value = "{slug}/create", method = RequestMethod.POST,

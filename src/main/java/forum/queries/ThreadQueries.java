@@ -6,6 +6,12 @@ package forum.queries;
 
 public class ThreadQueries {
 
+//    todo
+    public static String create() {
+
+        return "";
+    }
+
     public static String getBySlugOrId(final String slug_or_id) {
         StringBuilder builder = new StringBuilder(
                 "SELECT u.nickname, t.created, f.slug, t.id, t.message, t.slug, t.title, t.votes " +
