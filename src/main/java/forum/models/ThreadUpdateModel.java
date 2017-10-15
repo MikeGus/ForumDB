@@ -5,12 +5,12 @@ package forum.models;
  */
 
 @SuppressWarnings("unused")
-public class ThreadUpdate {
+public class ThreadUpdateModel {
 
     private String message;
     private String title;
 
-    public ThreadUpdate(final String message, final String title) {
+    public ThreadUpdateModel(final String message, final String title) {
         this.message = message;
         this.title = title;
     }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @SuppressWarnings("unused")
-public class Forum {
+public class ForumModel {
 
     private Integer posts;
     private String slug;
@@ -15,11 +15,11 @@ public class Forum {
     private String title;
     private String user;
 
-    public Forum(@JsonProperty("posts") final Integer posts,
-                 @JsonProperty("slug") final String slug,
-                 @JsonProperty("threads") final Integer threads,
-                 @JsonProperty("title") final String title,
-                 @JsonProperty("user") final String user) {
+    public ForumModel(@JsonProperty("posts") final Integer posts,
+                      @JsonProperty("slug") final String slug,
+                      @JsonProperty("threads") final Integer threads,
+                      @JsonProperty("title") final String title,
+                      @JsonProperty("user") final String user) {
         this.posts = posts;
         this.slug = slug;
         this.threads = threads;

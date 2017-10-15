@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @SuppressWarnings("unused")
-public class Thread {
+public class ThreadModel {
 
     private String author;
     private String created;
@@ -18,14 +18,14 @@ public class Thread {
     private String title;
     private Integer votes;
 
-    public Thread(@JsonProperty("author") final String author,
-                  @JsonProperty("created") final String created,
-                  @JsonProperty("forum") final String forum,
-                  @JsonProperty("id") final Integer id,
-                  @JsonProperty("message") final String message,
-                  @JsonProperty("slug") final String slug,
-                  @JsonProperty("title") final String title,
-                  @JsonProperty("votes") final Integer votes) {
+    public ThreadModel(@JsonProperty("author") final String author,
+                       @JsonProperty("created") final String created,
+                       @JsonProperty("forum") final String forum,
+                       @JsonProperty("id") final Integer id,
+                       @JsonProperty("message") final String message,
+                       @JsonProperty("slug") final String slug,
+                       @JsonProperty("title") final String title,
+                       @JsonProperty("votes") final Integer votes) {
         this.author = author;
         this.created = created;
         this.forum = forum;

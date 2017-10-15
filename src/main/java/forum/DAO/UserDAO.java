@@ -1,7 +1,7 @@
 package forum.DAO;
 
-import forum.models.User;
-import forum.models.UserUpdate;
+import forum.models.UserModel;
+import forum.models.UserUpdateModel;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 @SuppressWarnings("unused")
 @Service
 public interface UserDAO {
-    void create(final String nickname, final User profile);
-    User getByNickname(final String nickname);
-    User update(final String nickname, final UserUpdate profile);
+    void create(final String nickname, final UserModel profile);
+    UserModel getByNickname(final String nickname);
+    UserModel update(final String nickname, final UserUpdateModel profile);
 
     Integer status();
     void clear();

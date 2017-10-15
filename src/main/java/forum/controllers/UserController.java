@@ -1,7 +1,7 @@
 package forum.controllers;
 
-import forum.models.User;
-import forum.models.UserUpdate;
+import forum.models.UserModel;
+import forum.models.UserUpdateModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +17,21 @@ public class UserController {
 
     @RequestMapping(value = "{nickname}/create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createUser(@PathVariable(value = "nickname") final String nickname,
-                                           @RequestBody final User user) {
+    public ResponseEntity<UserModel> createUser(@PathVariable(value = "nickname") final String nickname,
+                                                @RequestBody final UserModel user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @RequestMapping(value = "{nickname}/profile", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUser(@PathVariable(value = "nickname") final String nickname) {
+    public ResponseEntity<UserModel> getUser(@PathVariable(value = "nickname") final String nickname) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @RequestMapping(value = "{nickname}/profile", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateUser(@PathVariable(value = "nickname") final String nickname,
-                                           @RequestBody final UserUpdate profile) {
+    public ResponseEntity<UserModel> updateUser(@PathVariable(value = "nickname") final String nickname,
+                                                @RequestBody final UserUpdateModel profile) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 

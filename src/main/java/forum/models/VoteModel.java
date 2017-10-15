@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @SuppressWarnings("unused")
-public class Vote {
+public class VoteModel {
 
     private String nickname;
     private Integer voice;
 
-    public Vote(@JsonProperty("nickname") final String nickname,
-                @JsonProperty("voice") final Integer voice) {
+    public VoteModel(@JsonProperty("nickname") final String nickname,
+                     @JsonProperty("voice") final Integer voice) {
         this.nickname = nickname;
         this.voice = voice;
     }

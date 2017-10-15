@@ -1,8 +1,8 @@
 package forum.controllers;
 
-import forum.models.Forum;
-import forum.models.Thread;
-import forum.models.User;
+import forum.models.ForumModel;
+import forum.models.ThreadModel;
+import forum.models.UserModel;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,35 +21,35 @@ public class ForumController {
 
     @RequestMapping(value="create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Forum> createForum(@RequestBody final Forum forum) {
+    public ResponseEntity<ForumModel> createForum(@RequestBody final ForumModel forum) {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @RequestMapping(value = "{slug}/create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Thread> createThread(@RequestBody final Thread thread,
-                                               @PathVariable(value = "slug") final String slug) {
+    public ResponseEntity<ThreadModel> createThread(@RequestBody final ThreadModel thread,
+                                                    @PathVariable(value = "slug") final String slug) {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @RequestMapping(value = "{slug}/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Forum> getForumDetails(@PathVariable(value = "slug") final String slug) {
+    public ResponseEntity<ForumModel> getForumDetails(@PathVariable(value = "slug") final String slug) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @RequestMapping(value = "{slug}/threads", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Thread>> getThreads(@PathVariable(value = "slug") final String slug,
-                                                   @RequestParam(value = "limit") final Integer limit,
-                                                   @RequestParam(value = "since") final String since,
-                                                   @RequestParam(value = "desc") final Boolean desc) {
+    public ResponseEntity<List<ThreadModel>> getThreads(@PathVariable(value = "slug") final String slug,
+                                                        @RequestParam(value = "limit") final Integer limit,
+                                                        @RequestParam(value = "since") final String since,
+                                                        @RequestParam(value = "desc") final Boolean desc) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @RequestMapping(value = "{slug}/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getUsers(@PathVariable(value = "slug") final String slug,
-                                               @RequestParam(value = "limit") final Integer limit,
-                                               @RequestParam(value = "since") final String since,
-                                               @RequestParam(value = "desc") final Boolean desc) {
+    public ResponseEntity<List<UserModel>> getUsers(@PathVariable(value = "slug") final String slug,
+                                                    @RequestParam(value = "limit") final Integer limit,
+                                                    @RequestParam(value = "since") final String since,
+                                                    @RequestParam(value = "desc") final Boolean desc) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

@@ -5,13 +5,13 @@ package forum.models;
  */
 
 @SuppressWarnings("unused")
-public class UserUpdate {
+public class UserUpdateModel {
 
     private String about;
     private String email;
     private String fullname;
 
-    public UserUpdate(final String about, final String email, final String fullname) {
+    public UserUpdateModel(final String about, final String email, final String fullname) {
         this.about = about;
         this.email = email;
         this.fullname = fullname;

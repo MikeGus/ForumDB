@@ -7,17 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @SuppressWarnings("unused")
-public class Status {
+public class StatusModel {
 
     private Integer forum;
     private Integer post;
     private Integer thread;
     private Integer user;
 
-    public Status(@JsonProperty("forum") final Integer forum,
-                  @JsonProperty("post") final Integer post,
-                  @JsonProperty("thread") final Integer thread,
-                  @JsonProperty("user") final Integer user) {
+    public StatusModel(@JsonProperty("forum") final Integer forum,
+                       @JsonProperty("post") final Integer post,
+                       @JsonProperty("thread") final Integer thread,
+                       @JsonProperty("user") final Integer user) {
         this.forum = forum;
         this.post = post;
         this.thread = thread;

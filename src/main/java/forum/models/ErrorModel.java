@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @SuppressWarnings("unused")
-public class Error {
+public class ErrorModel {
     private String message;
 
-    public Error(@JsonProperty("message") final String message) {
+    public ErrorModel(@JsonProperty("message") final String message) {
         this.message = message;
     }
 

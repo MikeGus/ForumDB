@@ -1,7 +1,8 @@
 package forum.DAO;
 
-import forum.models.Forum;
-import forum.models.User;
+import forum.models.ForumModel;
+import forum.models.UserModel;
+import forum.models.ThreadModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,12 +14,12 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Service
 public interface ForumDAO {
-    void create(final Forum forum);
-    Forum getBySlug(final String slug);
+    void create(final ForumModel forum);
+    ForumModel getBySlug(final String slug);
 
     Integer status();
     void clear();
 
-    List<Thread> getThreads(final String slug, final Integer limit, final String since, final Boolean desc);
-    List<User> getUsers(final String slug, final Integer limit, final String since, final Boolean desc);
+    List<ThreadModel> getThreads(final String slug, final Integer limit, final String since, final Boolean desc);
+    List<UserModel> getUsers(final String slug, final Integer limit, final String since, final Boolean desc);
 }

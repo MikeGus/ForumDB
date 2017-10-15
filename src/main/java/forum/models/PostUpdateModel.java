@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @SuppressWarnings("unused")
-public class PostUpdate {
+public class PostUpdateModel {
 
     private String message;
 
-    public PostUpdate(@JsonProperty("message") final String message) {
+    public PostUpdateModel(@JsonProperty("message") final String message) {
         this.message = message;
     }
 

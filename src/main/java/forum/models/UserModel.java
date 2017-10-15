@@ -7,17 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @SuppressWarnings("unused")
-public class User {
+public class UserModel {
 
     private String about;
     private String email;
     private String fullname;
     private String nickname;
 
-    public User(@JsonProperty("about") final String about,
-                @JsonProperty("email") final String email,
-                @JsonProperty("fullname") final String fullname,
-                @JsonProperty("nickname") final String nickname) {
+    public UserModel(@JsonProperty("about") final String about,
+                     @JsonProperty("email") final String email,
+                     @JsonProperty("fullname") final String fullname,
+                     @JsonProperty("nickname") final String nickname) {
         this.about = about;
         this.email = email;
         this.fullname = fullname;

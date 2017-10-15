@@ -1,8 +1,8 @@
 package forum.DAO;
 
-import forum.models.Post;
-import forum.models.PostFull;
-import forum.models.PostUpdate;
+import forum.models.PostModel;
+import forum.models.PostFullModel;
+import forum.models.PostUpdateModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +14,9 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Service
 public interface PostDAO {
-    void create(final String slug_or_id, final List<Post> posts);
-    PostFull getByIdFull(final Integer id, String[] related);
-    Post update(final Integer id, final PostUpdate post);
+    void create(final String slug_or_id, final List<PostModel> posts);
+    PostFullModel getByIdFull(final Integer id, String[] related);
+    PostModel update(final Integer id, final PostUpdateModel post);
 
     Integer status();
     void clear();

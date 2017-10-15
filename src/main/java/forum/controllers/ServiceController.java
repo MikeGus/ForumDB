@@ -1,6 +1,6 @@
 package forum.controllers;
 
-import forum.models.Status;
+import forum.models.StatusModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Status> getStatusDB() {
+    public ResponseEntity<StatusModel> getStatusDB() {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
