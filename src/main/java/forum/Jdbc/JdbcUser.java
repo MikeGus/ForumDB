@@ -21,7 +21,13 @@ public class JdbcUser extends JdbcDaoSupport implements UserDAO {
     }
 
     public UserModel getByNickname(final String nickname) {
-        return getJdbcTemplate().queryForObject(UserQueries.getByNickname(), new BeanPropertyRowMapper<>(UserModel.class));
+        return getJdbcTemplate().queryForObject(UserQueries.getByNickname(),
+                new Object[] {nickname}, new BeanPropertyRowMapper<>(UserModel.class));
+    }
+
+    public UserModel getByNicknameOrEmail(final String nicknameOrEmail) {
+        return getJdbcTemplate().queryForObject(UserQueries.getByNicknameOrEmail(),
+                new Object[] {nicknameOrEmail, nicknameOrEmail}, new BeanPropertyRowMapper<>(UserModel.class));
     }
 
     public UserModel update(final String nickname, final UserUpdateModel profile) {

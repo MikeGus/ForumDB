@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public interface UserDAO {
     void create(final String nickname, final UserModel profile);
     UserModel getByNickname(final String nickname);
+    UserModel getByNicknameOrEmail(final String email);
     UserModel update(final String nickname, final UserUpdateModel profile);
 
     Integer status();

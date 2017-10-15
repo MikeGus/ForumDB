@@ -17,6 +17,12 @@ public class UserQueries {
                 "WHERE nickname = ?";
     }
 
+    public static String getByNicknameOrEmail() {
+        return "SELECT about, email, fullname, nickname " +
+                "FROM users " +
+                "WHERE (email = ? OR nickname = ?)";
+    }
+
     public static String update() {
         return "UPDATE users " +
                 "SET about = ?, email = ?, fullname = ? " +
