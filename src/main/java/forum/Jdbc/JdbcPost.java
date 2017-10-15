@@ -16,7 +16,7 @@ import java.util.TimeZone;
  * Created by MikeGus on 15.10.17
  */
 
-@SuppressWarnings("unused")
+@SuppressWarnings("all")
 public class JdbcPost extends JdbcDaoSupport implements PostDAO {
 
     public void create(final String slug_or_id, final List<PostModel> posts) {
@@ -43,7 +43,7 @@ public class JdbcPost extends JdbcDaoSupport implements PostDAO {
             builder.append(" ?, ?, ?, ?, ?)");
         }
 
-        getJdbcTemplate().update(builder.toString());
+        getJdbcTemplate().update(builder.toString(), params.toArray());
     }
 
     public PostFullModel getByIdFull(final Integer id, String[] related) {
@@ -54,6 +54,7 @@ public class JdbcPost extends JdbcDaoSupport implements PostDAO {
         String sql = "UPDATE posts " +
                 "SET message = ?, is_edited = TRUE" +
                 "WHERE id = ?";
+
         getJdbcTemplate().update(sql, new Object[] {post.getMessage(), id});
         return null;
     }

@@ -15,6 +15,7 @@ import java.util.List;
  * Created by MikeGus on 15.10.17
  */
 
+@SuppressWarnings("all")
 public class JdbcThread extends JdbcDaoSupport implements ThreadDAO {
 
     public void create(final String slug, final ThreadModel thread) {
