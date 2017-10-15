@@ -8,6 +8,7 @@ import forum.queries.ForumQueries;
 import forum.rowmappers.ThreadRowMapper;
 import forum.rowmappers.UserRowMapper;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,10 @@ import java.util.List;
  */
 
 public class JdbcForum extends JdbcDaoSupport implements ForumDAO {
+
+    JdbcForum(JdbcTemplate template) {
+        setJdbcTemplate(template);
+    }
 
     public void create(final ForumModel forum) {
         getJdbcTemplate().update(ForumQueries.create(),
@@ -64,7 +69,7 @@ public class JdbcForum extends JdbcDaoSupport implements ForumDAO {
             args.add(limit);
         }
 
-        return getJdbcTemplate().query(ForumQueries.getUsers(slug, limit, since, desc),
+        return getJdbcTemplate().query(ForumQueries.getUsers(limit, since, desc),
                 args.toArray(), new UserRowMapper());
     }
 }

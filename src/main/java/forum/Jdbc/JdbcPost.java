@@ -4,9 +4,13 @@ import forum.DAO.PostDAO;
 import forum.models.PostModel;
 import forum.models.PostFullModel;
 import forum.models.PostUpdateModel;
+import forum.queries.ForumQueries;
 import forum.queries.PostQueries;
+import forum.queries.ThreadQueries;
 import forum.rowmappers.PostRowMapper;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import java.util.ArrayList;
@@ -17,6 +21,10 @@ import java.util.List;
  */
 
 public class JdbcPost extends JdbcDaoSupport implements PostDAO {
+
+    JdbcPost(JdbcTemplate template) {
+        setJdbcTemplate(template);
+    }
 
     public void create(final String slug_or_id, final List<PostModel> posts) {
 
@@ -31,10 +39,15 @@ public class JdbcPost extends JdbcDaoSupport implements PostDAO {
             params.add(post.getParent());
             params.add(post.getThread());
         }
-
         getJdbcTemplate().update(PostQueries.create(slug_or_id, posts.size()), params.toArray());
+
+        Integer threadId = getJdbcTemplate().queryForObject(ThreadQueries.getForumIdByThreadSlugOrId(slug_or_id),
+                new Object[] {slug_or_id}, new BeanPropertyRowMapper<>(Integer.class));
+        getJdbcTemplate().update(PostQueries.updatePostCount(),
+                new Object[] {posts.size(), threadId}, new BeanPropertyRowMapper<>(Integer.class));
     }
 
+//    todo
     public PostFullModel getByIdFull(final Integer id, String[] related) {
        return null;
     }

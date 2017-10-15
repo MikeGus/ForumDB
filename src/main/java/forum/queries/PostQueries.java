@@ -57,4 +57,10 @@ public class PostQueries {
     public static String clear() {
         return "DELETE FROM posts";
     }
+
+    public static String updatePostCount() {
+        return "UPDATE forums " +
+                "SET posts = posts + ? " +
+                "WHERE id = ?";
+    }
 }

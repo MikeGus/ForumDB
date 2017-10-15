@@ -53,7 +53,7 @@ public class ForumQueries {
         return builder.toString();
     }
 
-    public static String getUsers(final String slug, final Integer limit, final String since, final Boolean desc) {
+    public static String getUsers(final Integer limit, final String since, final Boolean desc) {
         StringBuilder builder = new StringBuilder(
                 "SELECT u.about, u.email, u.fullname, u.nickname " +
                 "FROM users u " +
