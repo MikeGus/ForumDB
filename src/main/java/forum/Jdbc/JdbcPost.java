@@ -4,7 +4,10 @@ import forum.DAO.PostDAO;
 import forum.models.PostModel;
 import forum.models.PostFullModel;
 import forum.models.PostUpdateModel;
+import forum.queries.PostQueries;
+import forum.rowmappers.PostRowMapper;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import java.text.SimpleDateFormat;
@@ -20,30 +23,20 @@ import java.util.TimeZone;
 public class JdbcPost extends JdbcDaoSupport implements PostDAO {
 
     public void create(final String slug_or_id, final List<PostModel> posts) {
-        String sql = "INSERT INTO posts (user_id, created, forum_id, id, is_edited, message, parent_id," +
-                " thread_id) VALUES";
-        StringBuilder builder = new StringBuilder(sql);
-
-        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         List<Object> params = new ArrayList<>();
-
         for (PostModel post : posts) {
-            builder.append(" ((SELECT id FROM users WHERE nickname = ?), ?,");
             params.add(post.getAuthor());
-
             params.add(post.getCreated());
-            if (slug_or_id.matches("\\d+")) {
-                builder.append("?,");
-            }
-            else {
-                builder.append("(SELECT id from forums WHERE slug = ?),");
-            }
-            builder.append(" ?, ?, ?, ?, ?)");
+            params.add(slug_or_id);
+            params.add(post.getId());
+            params.add(post.getIsEdited());
+            params.add(post.getMessage());
+            params.add(post.getParent());
+            params.add(post.getThread());
         }
 
-        getJdbcTemplate().update(builder.toString(), params.toArray());
+        getJdbcTemplate().update(PostQueries.create(slug_or_id, posts.size()), params.toArray());
     }
 
     public PostFullModel getByIdFull(final Integer id, String[] related) {
@@ -51,21 +44,17 @@ public class JdbcPost extends JdbcDaoSupport implements PostDAO {
     }
 
     public PostModel update(final Integer id, final PostUpdateModel post) {
-        String sql = "UPDATE posts " +
-                "SET message = ?, is_edited = TRUE" +
-                "WHERE id = ?";
-
-        getJdbcTemplate().update(sql, new Object[] {post.getMessage(), id});
-        return null;
+        getJdbcTemplate().update(PostQueries.update(), new Object[]{post.getMessage(), id});
+        return (PostModel) getJdbcTemplate().queryForObject(PostQueries.getById(),
+                new Object[] {id},
+                new PostRowMapper());
     }
 
     public Integer status() {
-        String sql = "SELECT COUNT(*) FROM posts";
-        return getJdbcTemplate().queryForObject(sql, new BeanPropertyRowMapper<>(Integer.class));
+        return getJdbcTemplate().queryForObject(PostQueries.status(), new BeanPropertyRowMapper<>(Integer.class));
     }
 
     public void clear() {
-        String sql = "DELETE FROM posts";
-        getJdbcTemplate().execute(sql);
+        getJdbcTemplate().execute(PostQueries.clear());
     }
 }
