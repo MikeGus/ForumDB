@@ -7,19 +7,15 @@ import forum.models.PostUpdateModel;
 import forum.queries.PostQueries;
 import forum.rowmappers.PostRowMapper;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by MikeGus on 15.10.17
  */
 
-@SuppressWarnings("all")
 public class JdbcPost extends JdbcDaoSupport implements PostDAO {
 
     public void create(final String slug_or_id, final List<PostModel> posts) {

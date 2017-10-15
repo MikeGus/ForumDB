@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 
-@SuppressWarnings("all")
 public class JdbcUser extends JdbcDaoSupport implements UserDAO {
 
     public void create(final String nickname, final UserModel profile) {
