@@ -6,15 +6,23 @@ package forum.queries;
 
 public class ThreadQueries {
 
-//    todo
-    public static String create() {
+    private String author;
+    private String created;
+    private String forum;
+    private Integer id;
+    private String message;
+    private String slug;
+    private String title;
+    private Integer votes;
 
-        return "";
-    }
+    public static String create = "INSERT INTO threads (user_id, created, forum_id, message, slug, title) " +
+        "VALUES ((SELECT id FROM users WHERE nickname = ?), COALESCE(?::TIMESTAMPTZ, CURRENT_TIMESTAMP), " +
+            "(SELECT id FROM forums WHERE slug = ?), ?, ?, ?) RETURNING id";
 
     public static String getBySlugOrId(final String slug_or_id) {
         StringBuilder builder = new StringBuilder(
-                "SELECT u.nickname, t.created, f.slug, t.id, t.message, t.slug, t.title, t.votes " +
+                "SELECT u.nickname AS author, t.created AS created, f.slug AS forum, t.id AS id, t.message AS message, " +
+                        "t.slug AS slug, t.title AS title, t.votes AS votes " +
                 "FROM threads t " +
                 "JOIN users u ON (u.id = t.user_id) " +
                 "JOIN forums f ON (f.id = t.forum_id) "
@@ -24,11 +32,15 @@ public class ThreadQueries {
             builder.append("WHERE t.id = ?");
         }
         else {
-            builder.append("WHERE t.slug = ?");
+            builder.append("WHERE LOWER(t.slug) = LOWER(?)");
         }
 
         return builder.toString();
     }
+
+    public static String getById = "SELECT u.nickname AS author, t.created , f.slug AS forum, t.id," +
+            "t.message AS message, t.slug AS slug, t.title, t.votes FROM threads t JOIN users u ON (u.id = t.user_id) " +
+            "JOIN forums f ON (f.id = t.forum_id) WHERE t.id = ?";
 
     public static String update() {
         return "UPDATE threads " +

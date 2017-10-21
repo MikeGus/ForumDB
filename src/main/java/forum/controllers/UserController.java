@@ -46,8 +46,7 @@ public class UserController {
         try {
              user = userService.getByNickname(nickname);
         } catch (DataAccessException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel("Can't find user with nickname "+
-                    nickname));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
         }
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
@@ -60,10 +59,9 @@ public class UserController {
             UserModel user = userService.update(nickname, profile);
             return ResponseEntity.status(HttpStatus.OK).body(user);
         } catch (DuplicateKeyException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorModel("Conflict with existing data"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorModel(ex.getMessage()));
         } catch (DataAccessException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel("Can't find user with nickname " +
-                nickname));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
         }
     }
 }

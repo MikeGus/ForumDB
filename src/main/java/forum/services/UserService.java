@@ -5,11 +5,13 @@ import forum.models.UserUpdateModel;
 import forum.queries.UserQueries;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static forum.rowmappers.RowMapperCollection.readUser;
 
+@Transactional
 @Service
 public class UserService {
 

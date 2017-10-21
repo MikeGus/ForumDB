@@ -18,7 +18,7 @@ public class RowMapperCollection {
 
     public static RowMapper<PostModel> readPost = (rs, i) -> {
         final Timestamp ts = rs.getTimestamp("p.created");
-        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm::ss.SSS'Z'");
+        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         return new PostModel(rs.getString("u.nickname"), df.format(ts.getTime()),
@@ -28,24 +28,23 @@ public class RowMapperCollection {
     };
 
     public static RowMapper<ThreadModel> readThread = (rs, i) -> {
-        final Timestamp ts = rs.getTimestamp("t.created");
-        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm::ss.SSS'Z'");
+        final Timestamp ts = rs.getTimestamp("created");
+        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        return new ThreadModel(rs.getString("u.nickname"), df.format(ts.getTime()),
-                rs.getString("f.slug"), rs.getInt("t.id"),
-                rs.getString("t.message"), rs.getString("t.slug"),
-                rs.getString("t.title"), rs.getInt("t.votes"));
+        ThreadModel result = new ThreadModel(rs.getString("author"), df.format(ts.getTime()),
+                rs.getString("forum"), rs.getInt("id"),
+                rs.getString("message"), rs.getString("slug"),
+                rs.getString("title"), rs.getInt("votes"));
+        return result;
     };
 
     public static RowMapper<UserModel> readUser = (rs, i) ->
             new UserModel(rs.getString("about"), rs.getString("email"),
                 rs.getString("fullname"), rs.getString("nickname"));
 
-    public static RowMapper<ForumModel> readForum = (rs, i) -> {
-        System.out.println("USER:  " + rs.getString("user"));
-        return new ForumModel(rs.getInt("posts"), rs.getString("slug"),
+    public static RowMapper<ForumModel> readForum = (rs, i) ->
+        new ForumModel(rs.getInt("posts"), rs.getString("slug"),
                 rs.getInt("threads"), rs.getString("title"),
                 rs.getString("user"));
-    };
 }

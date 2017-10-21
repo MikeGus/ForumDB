@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS threads (
   forum_id  INTEGER       REFERENCES forums(id) ON DELETE CASCADE NOT NULL,
   id        SERIAL        PRIMARY KEY,
   message   TEXT                                                  NOT NULL,
-  slug      CITEXT        DEFAULT NULL,
+  slug      CITEXT        UNIQUE DEFAULT NULL,
   title     TEXT                                                  NOT NULL,
   votes     INTEGER       DEFAULT 0
 );
