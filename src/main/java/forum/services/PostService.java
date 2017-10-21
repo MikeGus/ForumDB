@@ -1,6 +1,5 @@
-package forum.jdbc;
+package forum.services;
 
-import forum.dao.PostDAO;
 import forum.models.PostModel;
 import forum.models.PostFullModel;
 import forum.models.PostUpdateModel;
@@ -9,8 +8,8 @@ import forum.queries.ThreadQueries;
 import forum.rowmappers.RowMapperCollection;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +17,13 @@ import java.util.List;
  * Created by MikeGus on 15.10.17
  */
 
-public class JdbcPost extends JdbcTemplate implements PostDAO {
+@Service
+public class PostService {
 
-    private DataSource dataSource;
+    private JdbcTemplate template;
 
-    public JdbcPost(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public PostService(JdbcTemplate template) {
+        this.template = template;
     }
 
     public void create(final String slug_or_id, final List<PostModel> posts) {
@@ -39,12 +39,12 @@ public class JdbcPost extends JdbcTemplate implements PostDAO {
             params.add(post.getParent());
             params.add(post.getThread());
         }
-        this.update(PostQueries.create(slug_or_id, posts.size()), params.toArray());
+        template.update(PostQueries.create(slug_or_id, posts.size()), params.toArray());
 
-        Integer threadId = this.queryForObject(ThreadQueries.getForumIdByThreadSlugOrId(slug_or_id),
+        Integer threadId = template.queryForObject(ThreadQueries.getForumIdByThreadSlugOrId(slug_or_id),
                 new BeanPropertyRowMapper<>(Integer.class), slug_or_id);
 
-        this.update(PostQueries.updatePostCount, new BeanPropertyRowMapper<>(Integer.class),
+        template.update(PostQueries.updatePostCount, new BeanPropertyRowMapper<>(Integer.class),
                 posts.size(), threadId);
     }
 
@@ -54,15 +54,15 @@ public class JdbcPost extends JdbcTemplate implements PostDAO {
     }
 
     public PostModel update(final Integer id, final PostUpdateModel post) {
-        this.update(PostQueries.update, post.getMessage(), id);
-        return this.queryForObject(PostQueries.getById, RowMapperCollection.readPost, id);
+        template.update(PostQueries.update, post.getMessage(), id);
+        return template.queryForObject(PostQueries.getById, RowMapperCollection.readPost, id);
     }
 
     public Integer status() {
-        return this.queryForObject(PostQueries.status, new BeanPropertyRowMapper<>(Integer.class));
+        return template.queryForObject(PostQueries.status, Integer.class);
     }
 
     public void clear() {
-        this.execute(PostQueries.clear);
+        template.execute(PostQueries.clear);
     }
 }

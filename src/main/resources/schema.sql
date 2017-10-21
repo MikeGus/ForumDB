@@ -1,3 +1,5 @@
+-- noinspection SqlResolveForFile
+
 CREATE EXTENSION IF NOT EXISTS CITEXT;
 
 DROP TABLE IF EXISTS users CASCADE;

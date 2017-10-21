@@ -1,49 +1,47 @@
-package forum.jdbc;
+package forum.services;
 
-import forum.dao.UserDAO;
 import forum.models.UserModel;
 import forum.models.UserUpdateModel;
 import forum.queries.UserQueries;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
+@Service
+public class UserService {
 
+    private JdbcTemplate template;
 
-public class JdbcUser extends JdbcTemplate implements UserDAO {
-
-    private DataSource dataSource;
-
-    public JdbcUser(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public UserService(JdbcTemplate template) {
+        this.template = template;
     }
 
     public void create(final String nickname, final UserModel profile) {
-        this.update(UserQueries.create, profile.getAbout(), profile.getEmail(), profile.getFullname(), nickname);
+        template.update(UserQueries.create, profile.getAbout(), profile.getEmail(), profile.getFullname(), nickname);
     }
 
     public UserModel getByNickname(final String nickname) {
-        return this.queryForObject(UserQueries.getByNickname, new BeanPropertyRowMapper<>(UserModel.class),
+        return template.queryForObject(UserQueries.getByNickname, new BeanPropertyRowMapper<>(UserModel.class),
                 nickname);
     }
 
     public UserModel getByNicknameOrEmail(final String nicknameOrEmail) {
-        return this.queryForObject(UserQueries.getByNicknameOrEmail,
+        return template.queryForObject(UserQueries.getByNicknameOrEmail,
                 new BeanPropertyRowMapper<>(UserModel.class), nicknameOrEmail, nicknameOrEmail);
     }
 
     public UserModel update(final String nickname, final UserUpdateModel profile) {
-        this.update(UserQueries.update, profile.getAbout(), profile.getEmail(),
+        template.update(UserQueries.update, profile.getAbout(), profile.getEmail(),
                 profile.getFullname(), nickname);
 
         return getByNickname(nickname);
     }
 
     public Integer status() {
-        return this.queryForObject(UserQueries.status, new BeanPropertyRowMapper<>(Integer.class));
+        return template.queryForObject(UserQueries.status, Integer.class);
     }
 
     public void clear() {
-        this.execute(UserQueries.clear);
+        template.execute(UserQueries.clear);
     }
 }

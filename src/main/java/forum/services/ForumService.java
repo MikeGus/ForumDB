@@ -1,6 +1,5 @@
-package forum.jdbc;
+package forum.services;
 
-import forum.dao.ForumDAO;
 import forum.models.ForumModel;
 import forum.models.ThreadModel;
 import forum.models.UserModel;
@@ -9,8 +8,8 @@ import forum.rowmappers.RowMapperCollection;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,31 +17,31 @@ import java.util.List;
  * Created by MikeGus on 15.10.17
  */
 
-public class JdbcForum extends JdbcTemplate implements ForumDAO {
+@Service
+public class ForumService {
 
-    private DataSource dataSource;
+    private JdbcTemplate template;
 
-    public JdbcForum(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public ForumService(JdbcTemplate template) {
+        this.template = template;
     }
 
     public void create(final ForumModel forum) {
-        this.update(ForumQueries.create, forum.getSlug(), forum.getTitle(), forum.getUser());
+        template.update(ForumQueries.create, forum.getSlug(), forum.getTitle(), forum.getUser());
     }
 
     public ForumModel getBySlug(final String slug) {
-        return this.queryForObject(ForumQueries.getBySlug,
+        return template.queryForObject(ForumQueries.getBySlug,
                 new Object[] {slug},
                 new BeanPropertyRowMapper<>(ForumModel.class));
     }
 
     public Integer status() {
-        return this.queryForObject(ForumQueries.status,
-                new BeanPropertyRowMapper<>(Integer.class));
+        return template.queryForObject(ForumQueries.status, Integer.class);
     }
 
     public void clear() {
-        this.execute(ForumQueries.clear);
+        template.execute(ForumQueries.clear);
     }
 
     public List<ThreadModel> getThreads(final String slug, final Integer limit, final String since, final Boolean desc) {
@@ -56,7 +55,7 @@ public class JdbcForum extends JdbcTemplate implements ForumDAO {
             args.add(limit);
         }
 
-        return this.query(ForumQueries.getThreads(limit, since, desc),
+        return template.query(ForumQueries.getThreads(limit, since, desc),
                 args.toArray(), RowMapperCollection.readThread);
     }
 
@@ -71,7 +70,7 @@ public class JdbcForum extends JdbcTemplate implements ForumDAO {
             args.add(limit);
         }
 
-        return this.query(ForumQueries.getUsers(limit, since, desc),
+        return template.query(ForumQueries.getUsers(limit, since, desc),
                 args.toArray(), RowMapperCollection.readUser);
     }
 }

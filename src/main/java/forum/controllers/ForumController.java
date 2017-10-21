@@ -1,11 +1,12 @@
 package forum.controllers;
 
-import forum.jdbc.JdbcForum;
+import forum.services.ForumService;
 import forum.models.ErrorModel;
 import forum.models.ForumModel;
 import forum.models.ThreadModel;
 import forum.models.UserModel;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -19,11 +20,14 @@ import java.util.List;
  * Created by MikeGus on 12.10.17
  */
 
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping(value="api/forum")
 public class ForumController {
 
-    private JdbcForum jdbcForum;
+    @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
+    @Autowired
+    private ForumService jdbcForum;
 
     @RequestMapping(value="create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
