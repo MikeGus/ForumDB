@@ -8,12 +8,14 @@ public class UserQueries {
 
     public static String create = "INSERT INTO users (about, email, fullname, nickname) VALUES (?, ?, ?, ?)";
 
-    public static String getByNickname = "SELECT about, email, fullname, nickname FROM users WHERE nickname = ?";
+    public static String getByNickname = "SELECT * FROM users WHERE LOWER(nickname) = " +
+            "LOWER(?)";
 
-    public static String getByNicknameOrEmail = "SELECT about, email, fullname, nickname FROM users " +
-            "WHERE (email = ? OR nickname = ?)";
+    public static String getByNicknameOrEmail = "SELECT * FROM users " +
+            "WHERE (LOWER(nickname) = LOWER(?) OR LOWER(email) = LOWER(?))";
 
-    public static String update = "UPDATE users SET about = ?, email = ?, fullname = ? WHERE nickname = ?";
+    public static String update = "UPDATE users SET about = ?, email = ?, fullname = ? WHERE LOWER(nickname) = " +
+            "LOWER(?)";
 
     public static String status = "SELECT COUNT(*) FROM users";
 

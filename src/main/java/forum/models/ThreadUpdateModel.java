@@ -1,5 +1,7 @@
 package forum.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by MikeGus on 14.10.17
  */
@@ -10,7 +12,8 @@ public class ThreadUpdateModel {
     private String message;
     private String title;
 
-    public ThreadUpdateModel(final String message, final String title) {
+    public ThreadUpdateModel(@JsonProperty("message") final String message,
+                             @JsonProperty("title") final String title) {
         this.message = message;
         this.title = title;
     }

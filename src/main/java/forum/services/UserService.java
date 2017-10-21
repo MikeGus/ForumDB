@@ -6,6 +6,8 @@ import forum.queries.UserQueries;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static forum.rowmappers.RowMapperCollection.readUser;
 
 @Service
@@ -30,9 +32,24 @@ public class UserService {
                 readUser, nicknameOrEmail, nicknameOrEmail);
     }
 
+    public List<UserModel> getByNicknameOrEmail(final String nickname, final String email) {
+        return template.query(UserQueries.getByNicknameOrEmail, readUser, nickname, email);
+    }
+
     public UserModel update(final String nickname, final UserUpdateModel profile) {
-        template.update(UserQueries.update, profile.getAbout(), profile.getEmail(),
-                profile.getFullname(), nickname);
+        UserModel user = getByNickname(nickname);
+        if (profile.getAbout() != null) {
+            user.setAbout(profile.getAbout());
+        }
+        if (profile.getEmail() != null) {
+            user.setEmail(profile.getEmail());
+        }
+        if (profile.getFullname() != null) {
+            user.setFullname(profile.getFullname());
+        }
+
+        template.update(UserQueries.update, user.getAbout(), user.getEmail(),
+                user.getFullname(), nickname);
 
         return getByNickname(nickname);
     }

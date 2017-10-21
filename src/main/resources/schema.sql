@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS votes  CASCADE;
 CREATE TABLE IF NOT EXISTS users (
   id        SERIAL  PRIMARY KEY,
   about     TEXT,
-  email     TEXT    UNIQUE        NOT NULL,
+  email     CITEXT    UNIQUE        NOT NULL,
   fullname  TEXT                  NOT NULL,
   nickname  CITEXT  UNIQUE
 );

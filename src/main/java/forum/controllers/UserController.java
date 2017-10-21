@@ -26,12 +26,13 @@ public class UserController {
 
     @RequestMapping(value = "{nickname}/create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createUser(@PathVariable(value = "nickname") final String nickname,
+    public ResponseEntity createUser(@PathVariable(value = "nickname") final String nickname,
                                                 @RequestBody final UserModel user) {
         try {
             userService.create(nickname, user);
         } catch (DuplicateKeyException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(userService.getByNickname(nickname));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(userService.getByNicknameOrEmail(nickname,
+                    user.getEmail()));
         }
 
         user.setNickname(nickname);
@@ -40,7 +41,7 @@ public class UserController {
 
     @RequestMapping(value = "{nickname}/profile", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getUser(@PathVariable(value = "nickname") final String nickname) {
+    public ResponseEntity getUser(@PathVariable(value = "nickname") final String nickname) {
         UserModel user;
         try {
              user = userService.getByNickname(nickname);
@@ -53,17 +54,16 @@ public class UserController {
 
     @RequestMapping(value = "{nickname}/profile", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateUser(@PathVariable(value = "nickname") final String nickname,
+    public ResponseEntity updateUser(@PathVariable(value = "nickname") final String nickname,
                                                 @RequestBody final UserUpdateModel profile) {
-        UserModel user;
         try {
-            user = userService.update(nickname, profile);
+            UserModel user = userService.update(nickname, profile);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
         } catch (DuplicateKeyException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorModel("Conflict with existing data"));
         } catch (DataAccessException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel("Can't find user with nickname " +
                 nickname));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }

@@ -1,5 +1,7 @@
 package forum.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by MikeGus on 14.10.17
  */
@@ -11,7 +13,9 @@ public class UserUpdateModel {
     private String email;
     private String fullname;
 
-    public UserUpdateModel(final String about, final String email, final String fullname) {
+    public UserUpdateModel(@JsonProperty("about") final String about,
+                           @JsonProperty("email") final String email,
+                           @JsonProperty("fullname") final String fullname) {
         this.about = about;
         this.email = email;
         this.fullname = fullname;

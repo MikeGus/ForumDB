@@ -1,5 +1,6 @@
 package forum.rowmappers;
 
+import forum.models.ForumModel;
 import forum.models.PostModel;
 import forum.models.ThreadModel;
 import forum.models.UserModel;
@@ -33,11 +34,8 @@ public class RowMapperCollection {
                 rs.getString("t.title"), rs.getInt("t.votes"));
     };
 
-    public static RowMapper<UserModel> readUser = (rs, i) -> {
-        System.out.println("BOI:" + rs.getString(1));
-        return new UserModel(rs.getString("about"), rs.getString("email"),
+    public static RowMapper<UserModel> readUser = (rs, i) ->
+            new UserModel(rs.getString("about"), rs.getString("email"),
                 rs.getString("fullname"), rs.getString("nickname"));
-    };
-
 
 }

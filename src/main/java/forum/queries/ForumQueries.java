@@ -7,9 +7,9 @@ package forum.queries;
 public class ForumQueries {
 
     public static String create = "INSERT INTO forums (slug, title, user_id) " +
-            "VALUES (?, ?, (SELECT id FROM users WHERE nickname = ?));";
+            "VALUES (?, ?, (SELECT id FROM users WHERE LOWER(nickname) = LOWER(?)))";
 
-    public static String getBySlug = "SELECT (*) FROM forums WHERE slug = ?;";
+    public static String getBySlug = "SELECT * FROM forums WHERE LOWER(slug) = LOWER(?)";
 
     public static String status = "SELECT COUNT(*) FROM forums;";
 
