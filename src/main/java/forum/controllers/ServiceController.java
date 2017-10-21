@@ -1,9 +1,9 @@
 package forum.controllers;
 
-import forum.Jdbc.JdbcForum;
-import forum.Jdbc.JdbcPost;
-import forum.Jdbc.JdbcThread;
-import forum.Jdbc.JdbcUser;
+import forum.jdbc.JdbcForum;
+import forum.jdbc.JdbcPost;
+import forum.jdbc.JdbcThread;
+import forum.jdbc.JdbcUser;
 import forum.models.StatusModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

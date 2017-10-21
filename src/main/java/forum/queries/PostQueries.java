@@ -36,31 +36,20 @@ public class PostQueries {
         return builder.toString();
     }
 
-    public static String update() {
-        return "UPDATE posts " +
-                "SET message = ?, is_edited = TRUE " +
-                "WHERE id = ?";
-    }
+    public static String update = "UPDATE posts SET message = ?, is_edited = TRUE WHERE id = ?";
 
-    public static String getById() {
-        return "SELECT u.nickname, p.created, f.slug, p.id, p.is_edited, p.message, p.parent, p.thread " +
+    public static String getById = "SELECT u.nickname, p.created, f.slug, p.id, p.is_edited, p.message, p.parent, p.thread " +
                 "FROM posts p " +
                 "JOIN users u ON (p.user_id = u.id) " +
                 "JOIN forums f ON (p.forum_id = f.id) " +
                 "WHERE p.id = ?";
-    }
 
-    public static String status() {
-        return "SELECT COUNT(*) FROM posts";
-    }
+    public static String status = "SELECT COUNT(*) FROM posts";
 
-    public static String clear() {
-        return "DELETE FROM posts";
-    }
+    public static String clear = "DELETE FROM posts";
 
-    public static String updatePostCount() {
-        return "UPDATE forums " +
+    public static String updatePostCount =
+                "UPDATE forums " +
                 "SET posts = posts + ? " +
                 "WHERE id = ?";
-    }
 }

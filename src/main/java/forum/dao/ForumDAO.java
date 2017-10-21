@@ -1,4 +1,4 @@
-package forum.DAO;
+package forum.dao;
 
 import forum.models.ForumModel;
 import forum.models.UserModel;

@@ -36,13 +36,9 @@ public class ThreadQueries {
                 "WHERE id = ?";
     }
 
-    public static String status() {
-        return "SELECT COUNT(*) FROM threads";
-    }
+    public static String status = "SELECT COUNT(*) FROM threads";
 
-    public static String clear() {
-        return "DELETE FROM threads";
-    }
+    public static String clear = "DELETE FROM threads";
 
     public static String getForumIdByThreadSlugOrId(final String slug_or_id) {
         if (slug_or_id.matches("\\d+")) {
@@ -59,9 +55,5 @@ public class ThreadQueries {
         }
     }
 
-    public static String updateThreadCount() {
-        return "UPDATE forums "+
-                "SET threads = threads + ? "+
-                "WHERE id = ?";
-    }
+    public static String updateThreadCount = "UPDATE forums SET threads = threads + ? WHERE id = ?";
 }

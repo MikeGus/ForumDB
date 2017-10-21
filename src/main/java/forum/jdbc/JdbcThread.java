@@ -1,38 +1,38 @@
-package forum.Jdbc;
+package forum.jdbc;
 
-import forum.DAO.ThreadDAO;
+import forum.dao.ThreadDAO;
 import forum.models.PostModel;
 import forum.models.ThreadModel;
 import forum.models.ThreadUpdateModel;
 import forum.models.VoteModel;
 import forum.queries.ThreadQueries;
-import forum.rowmappers.ThreadRowMapper;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import forum.rowmappers.RowMapperCollection;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
  * Created by MikeGus on 15.10.17
  */
 
-public class JdbcThread extends JdbcDaoSupport implements ThreadDAO {
+public class JdbcThread extends JdbcTemplate implements ThreadDAO {
 
-    JdbcThread(JdbcTemplate template) {
-        setJdbcTemplate(template);
+    private DataSource dataSource;
+
+    public JdbcThread(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
 //    todo
     public void create(final String slug, final ThreadModel thread) {
-
-        getJdbcTemplate().update(ThreadQueries.updateThreadCount(), new Object[]{1, thread.getId()});
+        this.update(ThreadQueries.updateThreadCount, 1, thread.getId());
     }
 
     public ThreadModel getBySlugOrId(final String slug_or_id) {
-        return (ThreadModel) getJdbcTemplate().queryForObject(ThreadQueries.getBySlugOrId(slug_or_id),
-                new Object[] {slug_or_id},
-                new ThreadRowMapper());
+        return this.queryForObject(ThreadQueries.getBySlugOrId(slug_or_id),
+                RowMapperCollection.readThread, slug_or_id);
     }
 
     public ThreadModel update(final String slug_or_id, final ThreadUpdateModel thread) {
@@ -40,8 +40,7 @@ public class JdbcThread extends JdbcDaoSupport implements ThreadDAO {
         threadDB.setMessage(thread.getMessage());
         threadDB.setTitle(thread.getTitle());
 
-        getJdbcTemplate().update(ThreadQueries.update(),
-                new Object[] {threadDB.getTitle(), threadDB.getMessage(), threadDB.getId()});
+        this.update(ThreadQueries.update(), threadDB.getTitle(), threadDB.getMessage(), threadDB.getId());
 
         return threadDB;
     }
@@ -58,10 +57,10 @@ public class JdbcThread extends JdbcDaoSupport implements ThreadDAO {
     }
 
     public Integer status() {
-        return getJdbcTemplate().queryForObject(ThreadQueries.status(), new BeanPropertyRowMapper<>(Integer.class));
+        return this.queryForObject(ThreadQueries.status, new BeanPropertyRowMapper<>(Integer.class));
     }
 
     public void clear() {
-        getJdbcTemplate().execute(ThreadQueries.clear());
+        this.execute(ThreadQueries.clear);
     }
 }

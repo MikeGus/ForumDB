@@ -1,6 +1,6 @@
 package forum.controllers;
 
-import forum.Jdbc.JdbcUser;
+import forum.jdbc.JdbcUser;
 import forum.models.ErrorModel;
 import forum.models.UserModel;
 import forum.models.UserUpdateModel;

@@ -6,22 +6,14 @@ package forum.queries;
 
 public class ForumQueries {
 
-    public static String create() {
-        return "INSERT INTO forums (slug, title, user_id) " +
-                "VALUES (?, ?, (SELECT id FROM users WHERE nickname = ?))";
-    }
+    public static String create = "INSERT INTO forums (slug, title, user_id) " +
+            "VALUES (?, ?, (SELECT id FROM users WHERE nickname = ?));";
 
-    public static String getBySlug() {
-        return "SELECT (*) FROM forums WHERE slug = ?";
-    }
+    public static String getBySlug = "SELECT (*) FROM forums WHERE slug = ?;";
 
-    public static String status() {
-        return "SELECT COUNT(*) FROM forums";
-    }
+    public static String status = "SELECT COUNT(*) FROM forums;";
 
-    public static String clear() {
-        return "DELETE FROM forums";
-    }
+    public static String clear = "DELETE FROM forums;";
 
     public static String getThreads(final Integer limit, final String since, final Boolean desc) {
         StringBuilder builder = new StringBuilder(

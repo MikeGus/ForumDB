@@ -1,6 +1,6 @@
 package forum.controllers;
 
-import forum.Jdbc.JdbcForum;
+import forum.jdbc.JdbcForum;
 import forum.models.ErrorModel;
 import forum.models.ForumModel;
 import forum.models.ThreadModel;
