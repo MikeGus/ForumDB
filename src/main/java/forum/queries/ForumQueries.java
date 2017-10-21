@@ -9,11 +9,13 @@ public class ForumQueries {
     public static String create = "INSERT INTO forums (slug, title, user_id) " +
             "VALUES (?, ?, (SELECT id FROM users WHERE LOWER(nickname) = LOWER(?)))";
 
-    public static String getBySlug = "SELECT * FROM forums WHERE LOWER(slug) = LOWER(?)";
+    public static String getBySlug = "SELECT f.posts as posts, f.slug as slug, f.threads as threads, " +
+            "f.title as title, u.nickname AS user FROM forums f " +
+            "JOIN users u ON(f.user_id = u.id) WHERE LOWER(f.slug) = LOWER(?)";
 
-    public static String status = "SELECT COUNT(*) FROM forums;";
+    public static String status = "SELECT COUNT(*) FROM forums";
 
-    public static String clear = "DELETE FROM forums;";
+    public static String clear = "DELETE FROM forums";
 
     public static String getThreads(final Integer limit, final String since, final Boolean desc) {
         StringBuilder builder = new StringBuilder(

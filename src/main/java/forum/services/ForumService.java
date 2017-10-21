@@ -6,12 +6,13 @@ import forum.models.UserModel;
 import forum.queries.ForumQueries;
 import forum.rowmappers.RowMapperCollection;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static forum.rowmappers.RowMapperCollection.readForum;
 
 /**
  * Created by MikeGus on 15.10.17
@@ -26,14 +27,13 @@ public class ForumService {
         this.template = template;
     }
 
-    public void create(final ForumModel forum) {
+    public ForumModel create(final ForumModel forum) {
         template.update(ForumQueries.create, forum.getSlug(), forum.getTitle(), forum.getUser());
+        return getBySlug(forum.getSlug());
     }
 
     public ForumModel getBySlug(final String slug) {
-        return template.queryForObject(ForumQueries.getBySlug,
-                new Object[] {slug},
-                new BeanPropertyRowMapper<>(ForumModel.class));
+        return template.queryForObject(ForumQueries.getBySlug, readForum, slug);
     }
 
     public Integer status() {

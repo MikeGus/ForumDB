@@ -27,19 +27,19 @@ public class ForumController {
 
     @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
-    private ForumService jdbcForum;
+    private ForumService forumService;
 
     @RequestMapping(value="create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createForum(@RequestBody final ForumModel forum) {
+    public ResponseEntity createForum(@RequestBody final ForumModel forum) {
         try {
-            jdbcForum.create(forum);
+            ForumModel result = forumService.create(forum);
+            return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (DuplicateKeyException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(jdbcForum.getBySlug(forum.getSlug()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(forumService.getBySlug(forum.getSlug()));
         } catch (DataAccessException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel("Owner not found"));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(jdbcForum.getBySlug(forum.getSlug()));
     }
 
     @RequestMapping(value = "{slug}/create", method = RequestMethod.POST,
@@ -50,8 +50,13 @@ public class ForumController {
     }
 
     @RequestMapping(value = "{slug}/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ForumModel> getForumDetails(@PathVariable(value = "slug") final String slug) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity getForumDetails(@PathVariable(value = "slug") final String slug) {
+        try {
+            ForumModel forum = forumService.getBySlug(slug);
+            return ResponseEntity.status(HttpStatus.OK).body(forum);
+        } catch(DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel("Can't find forum with slug " + slug));
+        }
     }
 
     @RequestMapping(value = "{slug}/threads", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

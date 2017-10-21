@@ -10,6 +10,10 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+/**
+ * Created by MikeGus on 21.10.17
+ */
+
 public class RowMapperCollection {
 
     public static RowMapper<PostModel> readPost = (rs, i) -> {
@@ -38,4 +42,10 @@ public class RowMapperCollection {
             new UserModel(rs.getString("about"), rs.getString("email"),
                 rs.getString("fullname"), rs.getString("nickname"));
 
+    public static RowMapper<ForumModel> readForum = (rs, i) -> {
+        System.out.println("USER:  " + rs.getString("user"));
+        return new ForumModel(rs.getInt("posts"), rs.getString("slug"),
+                rs.getInt("threads"), rs.getString("title"),
+                rs.getString("user"));
+    };
 }
