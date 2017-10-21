@@ -33,9 +33,11 @@ public class RowMapperCollection {
                 rs.getString("t.title"), rs.getInt("t.votes"));
     };
 
-    public static RowMapper<UserModel> readUser = (rs, i) ->
-        new UserModel(rs.getString("u.about"), rs.getString("u.email"),
-                rs.getString("u.fullname"), rs.getString("u.nickname"));
+    public static RowMapper<UserModel> readUser = (rs, i) -> {
+        System.out.println("BOI:" + rs.getString(1));
+        return new UserModel(rs.getString("about"), rs.getString("email"),
+                rs.getString("fullname"), rs.getString("nickname"));
+    };
 
 
 }

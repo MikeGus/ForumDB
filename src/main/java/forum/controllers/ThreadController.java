@@ -4,6 +4,8 @@ import forum.models.PostModel;
 import forum.models.ThreadModel;
 import forum.models.ThreadUpdateModel;
 import forum.models.VoteModel;
+import forum.services.ThreadService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,13 @@ import java.util.List;
  * Created by MikeGus on 14.10.17
  */
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SpringAutowiredFieldsWarningInspection"})
 @RestController
 @RequestMapping("api/thread")
 public class ThreadController {
+
+    @Autowired
+    private ThreadService service;
 
     @RequestMapping(value = "{slug_or_id}/create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

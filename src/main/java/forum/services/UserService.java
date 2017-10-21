@@ -3,9 +3,10 @@ package forum.services;
 import forum.models.UserModel;
 import forum.models.UserUpdateModel;
 import forum.queries.UserQueries;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import static forum.rowmappers.RowMapperCollection.readUser;
 
 @Service
 public class UserService {
@@ -21,13 +22,12 @@ public class UserService {
     }
 
     public UserModel getByNickname(final String nickname) {
-        return template.queryForObject(UserQueries.getByNickname, new BeanPropertyRowMapper<>(UserModel.class),
-                nickname);
+        return template.queryForObject(UserQueries.getByNickname, readUser, nickname);
     }
 
     public UserModel getByNicknameOrEmail(final String nicknameOrEmail) {
         return template.queryForObject(UserQueries.getByNicknameOrEmail,
-                new BeanPropertyRowMapper<>(UserModel.class), nicknameOrEmail, nicknameOrEmail);
+                readUser, nicknameOrEmail, nicknameOrEmail);
     }
 
     public UserModel update(final String nickname, final UserUpdateModel profile) {
