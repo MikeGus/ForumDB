@@ -59,7 +59,7 @@ public class PostService {
             if (post.getParent() != null && post.getParent() != 0) {
                 try {
                     id = template.queryForObject(PostQueries.checkParentId, Integer.class, post.getParent(),
-                            post.getThread());
+                            threadId);
                 } catch (IncorrectResultSizeDataAccessException ex) {
                     throw new NoSuchElementException("Parent not found!");
                 }

@@ -43,5 +43,5 @@ public class PostQueries {
                 "SET posts = posts + ? " +
                 "WHERE id = ?";
 
-    public static String checkParentId = "SELECT id FROM posts WHERE id = ?::BIGINT AND thread_id = ?";
+    public static String checkParentId = "SELECT id FROM posts WHERE id = ? AND thread_id = ?";
 }
