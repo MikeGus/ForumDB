@@ -70,4 +70,6 @@ public class ForumQueries {
 
         return builder.toString();
     }
+
+    public static String getSlugById = "SELECT slug FROM forums WHERE id = ?";
 }

@@ -20,4 +20,6 @@ public class UserQueries {
     public static String status = "SELECT COUNT(*) FROM users";
 
     public static String clear = "DELETE FROM users";
+
+    public static String getIdByNickname = "SELECT id FROM users WHERE LOWER(nickname) = LOWER(?)";
 }

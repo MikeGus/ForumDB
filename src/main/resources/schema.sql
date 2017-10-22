@@ -40,11 +40,11 @@ CREATE TABLE IF NOT EXISTS threads (
 CREATE TABLE IF NOT EXISTS posts (
   user_id   INTEGER     REFERENCES users(id)  ON DELETE CASCADE NOT NULL,
   created   TIMESTAMPTZ DEFAULT now()                           NOT NULL,
-  forum     INTEGER     REFERENCES forums(id) ON DELETE CASCADE NOT NULL,
+  forum_id    INTEGER     REFERENCES forums(id) ON DELETE CASCADE NOT NULL,
   id        BIGSERIAL   PRIMARY KEY,
-  is_edited BOOLEAN     DEFAULT FALSE                           NOT NULL,
+  is_edited BOOLEAN     NOT NULL DEFAULT FALSE,
   message   TEXT                                                NOT NULL,
-  parent_id BIGINT      REFERENCES posts(id)   ON DELETE CASCADE DEFAULT NULL,
+  parent_id BIGINT      DEFAULT 0,
   thread_id INTEGER     REFERENCES threads(id) ON DELETE CASCADE
 );
 

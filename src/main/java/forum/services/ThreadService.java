@@ -4,9 +4,9 @@ import forum.models.PostModel;
 import forum.models.ThreadModel;
 import forum.models.ThreadUpdateModel;
 import forum.models.VoteModel;
+import forum.queries.ForumQueries;
 import forum.queries.ThreadQueries;
 import org.springframework.jdbc.core.JdbcTemplate;
-import forum.rowmappers.RowMapperCollection;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +31,7 @@ public class ThreadService {
     public ThreadModel create(final String slug, final ThreadModel thread) {
         Integer id = template.queryForObject(ThreadQueries.create, Integer.class,
                 thread.getAuthor(),thread.getCreated(), slug, thread.getMessage(), thread.getSlug(), thread.getTitle());
-        template.update(ThreadQueries.updateThreadCount, 1, thread.getId());
+        template.update(ThreadQueries.updateThreadCount, 1, thread.getForum());
         return template.queryForObject(ThreadQueries.getById, readThread, id);
     }
 
@@ -56,9 +56,15 @@ public class ThreadService {
         return null;
     }
 
-//    todo
     public ThreadModel vote(final String slug_or_id, final VoteModel vote) {
-        return null;
+
+        ThreadModel thread = getBySlugOrId(slug_or_id);
+
+        template.update(ThreadQueries.addVote, vote.getNickname(), thread.getId(), vote.getVoice());
+        template.update(ThreadQueries.updateVotes, vote.getVoice(), thread.getId());
+        thread.setVotes(thread.getVotes() + vote.getVoice());
+
+        return thread;
     }
 
     public Integer status() {

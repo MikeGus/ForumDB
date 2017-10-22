@@ -9,30 +9,20 @@ import java.util.TimeZone;
 
 public class PostQueries {
 
-    public static String create(final String slug_or_id, final Integer numberOfPosts) {
-
-        String slugOrIdStr = slug_or_id.matches("\\d+") ? "?, " : "(SELECT id FROM forums WHERE slug = ?, ";
+    public static String create(final Integer numberOfPosts) {
 
         StringBuilder builder = new StringBuilder(
-                "INSERT INTO posts (user_id, created, forum_id, id, is_edited, message, parent_id, thread_id " +
-                "VALUES "
+                "INSERT INTO posts (user_id, created, forum_id, message, parent_id, thread_id) VALUES "
         );
 
-        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-
         for (Integer i = 0; i < numberOfPosts; ++i) {
-            builder.append("((SELECT id FROM users WHERE nickname = ?), ?, ");
-            builder.append(slugOrIdStr);
-            builder.append("?, ?, ?, ?, ?)");
+            builder.append("( ?, COALESCE(?::TIMESTAMPTZ, CURRENT_TIMESTAMP), ?, ?, ?, ?)");
             if (i != numberOfPosts - 1) {
                 builder.append(", ");
             }
-            else {
-                builder.append(" ");
-            }
         }
 
+        builder.append(" RETURNING created, id");
         return builder.toString();
     }
 
@@ -52,4 +42,6 @@ public class PostQueries {
                 "UPDATE forums " +
                 "SET posts = posts + ? " +
                 "WHERE id = ?";
+
+    public static String checkParentId = "SELECT id FROM posts WHERE id = ?::BIGINT AND thread_id = ?";
 }

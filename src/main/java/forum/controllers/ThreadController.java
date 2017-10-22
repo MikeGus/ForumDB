@@ -1,17 +1,19 @@
 package forum.controllers;
 
-import forum.models.PostModel;
-import forum.models.ThreadModel;
-import forum.models.ThreadUpdateModel;
-import forum.models.VoteModel;
+import forum.models.*;
+import forum.services.PostService;
 import forum.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Created by MikeGus on 14.10.17
@@ -23,13 +25,23 @@ import java.util.List;
 public class ThreadController {
 
     @Autowired
-    private ThreadService service;
+    private ThreadService threadService;
+
+    @Autowired
+    private PostService postService;
 
     @RequestMapping(value = "{slug_or_id}/create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PostModel>> createPosts(@PathVariable(value = "slug_or_id") final String slug_or_id,
-                                                       @RequestBody PostModel[] posts) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    public ResponseEntity createPosts(@PathVariable(value = "slug_or_id") final String slug_or_id,
+                                                       @RequestBody List<PostModel> posts) {
+        try {
+            List<PostModel> result = postService.create(slug_or_id, posts);
+            return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        } catch (IncorrectResultSizeDataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorModel(ex.getMessage()));
+        }
     }
 
     @RequestMapping(value = "{slug_or_id}/details", method = RequestMethod.GET,
@@ -57,8 +69,15 @@ public class ThreadController {
 
     @RequestMapping(value = "{slug_or_id}/vote", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ThreadModel> voteThread(@PathVariable(value = "slug_or_id") final String slug_or_id,
+    public ResponseEntity voteThread(@PathVariable(value = "slug_or_id") final String slug_or_id,
                                                   @RequestBody final VoteModel vote) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        try {
+            ThreadModel result = threadService.vote(slug_or_id, vote);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (DuplicateKeyException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorModel(ex.getMessage()));
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
+        }
     }
 }

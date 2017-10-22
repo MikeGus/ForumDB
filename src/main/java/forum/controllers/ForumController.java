@@ -53,7 +53,7 @@ public class ForumController {
             ThreadModel result = threadService.create(slug, thread);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (DuplicateKeyException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(threadService.getBySlugOrId(slug));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(threadService.getBySlugOrId(thread.getSlug()));
         }catch (DataAccessException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
         }
