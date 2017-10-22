@@ -11,13 +11,6 @@ public class ThreadQueries {
         "VALUES ((SELECT id FROM users WHERE nickname = ?), COALESCE(?::TIMESTAMPTZ, CURRENT_TIMESTAMP), " +
             "(SELECT id FROM forums WHERE LOWER(slug) = LOWER(?)), ?, ?, ?) RETURNING id";
 
-    public static String getBySlugOrId(final String slug_or_id) {
-        if (slug_or_id.matches("//d+")) {
-           return getById;
-        }
-
-        return getBySlug;
-    }
 
     public static String getById = "SELECT u.nickname AS author, t.created , f.slug AS forum, t.id, " +
             "t.message AS message, t.slug AS slug, t.title, t.votes FROM threads t JOIN users u ON (u.id = t.user_id) " +
@@ -56,8 +49,11 @@ public class ThreadQueries {
 
     public static String updateThreadCount = "UPDATE forums SET threads = threads + ? WHERE LOWER(slug) = LOWER(?)";
 
-    public static String addVote = "INSERT INTO votes (user_id, thread_id, voice) VALUES ((SELECT id FROM users " +
-            "WHERE LOWER(nickname) = LOWER(?)), ?, ?)";
+    public static String addVote = "INSERT INTO votes (user_id, thread_id, voice) VALUES (?, ?, ?)";
 
     public static String updateVotes = "UPDATE threads SET votes = votes + ? WHERE id = ?";
+
+    public static String checkPreviousVote = "SELECT voice FROM votes WHERE user_id = ? AND thread_id = ?";
+
+    public static String updateVote = "UPDATE votes SET voice = ? WHERE user_id = ? AND thread_id = ?";
 }

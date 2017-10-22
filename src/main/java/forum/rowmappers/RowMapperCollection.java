@@ -32,11 +32,10 @@ public class RowMapperCollection {
         final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        ThreadModel result = new ThreadModel(rs.getString("author"), df.format(ts.getTime()),
+        return new ThreadModel(rs.getString("author"), df.format(ts.getTime()),
                 rs.getString("forum"), rs.getInt("id"),
                 rs.getString("message"), rs.getString("slug"),
                 rs.getString("title"), rs.getInt("votes"));
-        return result;
     };
 
     public static RowMapper<UserModel> readUser = (rs, i) ->
@@ -53,7 +52,7 @@ public class RowMapperCollection {
         final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        return new PostModel(null, df.format(rs.getTimestamp("created")), null,
+        return new PostModel(null, df.format(ts), null,
                 rs.getInt("id"), Boolean.FALSE, null, null, null);
     };
 }
