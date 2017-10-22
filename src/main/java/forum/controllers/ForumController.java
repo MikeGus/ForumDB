@@ -70,18 +70,24 @@ public class ForumController {
     }
 
     @RequestMapping(value = "{slug}/threads", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ThreadModel>> getThreads(@PathVariable(value = "slug") final String slug,
+    public ResponseEntity getThreads(@PathVariable(value = "slug") final String slug,
                                                         @RequestParam(value = "limit", required = false) final Integer limit,
                                                         @RequestParam(value = "since", required = false) final String since,
                                                         @RequestParam(value = "desc", required = false) final Boolean desc) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        try {
+            ForumModel forum = forumService.getBySlug(slug);
+            List<ThreadModel> threads = forumService.getThreads(slug, limit, since, desc);
+            return ResponseEntity.status(HttpStatus.OK).body(threads);
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
+        }
     }
 
     @RequestMapping(value = "{slug}/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserModel>> getUsers(@PathVariable(value = "slug") final String slug,
-                                                    @RequestParam(value = "limit") final Integer limit,
-                                                    @RequestParam(value = "since") final String since,
-                                                    @RequestParam(value = "desc") final Boolean desc) {
+                                                    @RequestParam(value = "limit", required = false) final Integer limit,
+                                                    @RequestParam(value = "since", required = false) final String since,
+                                                    @RequestParam(value = "desc", required = false) final Boolean desc) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

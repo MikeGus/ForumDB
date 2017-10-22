@@ -4,7 +4,6 @@ import forum.models.ForumModel;
 import forum.models.ThreadModel;
 import forum.models.UserModel;
 import forum.queries.ForumQueries;
-import forum.rowmappers.RowMapperCollection;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static forum.rowmappers.RowMapperCollection.readForum;
+import static forum.rowmappers.RowMapperCollection.readThread;
+import static forum.rowmappers.RowMapperCollection.readUser;
 
 /**
  * Created by MikeGus on 15.10.17
@@ -56,7 +57,7 @@ public class ForumService {
         }
 
         return template.query(ForumQueries.getThreads(limit, since, desc),
-                args.toArray(), RowMapperCollection.readThread);
+                args.toArray(), readThread);
     }
 
     public List<UserModel> getUsers(final String slug, final Integer limit, final String since, final Boolean desc) {
@@ -71,6 +72,6 @@ public class ForumService {
         }
 
         return template.query(ForumQueries.getUsers(limit, since, desc),
-                args.toArray(), RowMapperCollection.readUser);
+                args.toArray(), readUser);
     }
 }

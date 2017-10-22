@@ -19,19 +19,19 @@ public class ForumQueries {
 
     public static String getThreads(final Integer limit, final String since, final Boolean desc) {
         StringBuilder builder = new StringBuilder(
-                        "SELECT u.nickname, t.created, f.slug, t.id, t.message, t.slug, t.title, t.votes " +
+                        "SELECT u.nickname AS author, t.created, f.slug AS forum, t.id, t.message, t.slug, t.title, t.votes " +
                         "FROM threads t " +
                         "JOIN users u ON (t.user_id = u.id) " +
-                        "JOIN forums f ON (f.id == t.forum_id) " +
-                        "WHERE f.slug = ? "
+                        "JOIN forums f ON (f.id = t.forum_id) " +
+                        "WHERE LOWER(f.slug) = LOWER(?) "
         );
 
         if (since != null) {
             if (desc == Boolean.TRUE) {
-                builder.append("AND t.created <= ? ");
+                builder.append("AND t.created <= ?::TIMESTAMPTZ ");
             }
             else{
-                builder.append("AND t.created >= ? ");
+                builder.append("AND t.created >= ?::TIMESTAMPTZ ");
             }
         }
 
