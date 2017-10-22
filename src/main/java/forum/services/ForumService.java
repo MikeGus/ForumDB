@@ -63,10 +63,13 @@ public class ForumService {
     public List<UserModel> getUsers(final String slug, final Integer limit, final String since, final Boolean desc) {
 
         List<Object> args = new ArrayList<>();
-        args.add(slug);
-        if (since != null) {
-            args.add(since);
+        for (int i = 0; i < 2; ++i) {
+            args.add(slug);
+            if (since != null) {
+                args.add(since);
+            }
         }
+
         if (limit != null) {
             args.add(limit);
         }

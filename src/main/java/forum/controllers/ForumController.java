@@ -84,10 +84,15 @@ public class ForumController {
     }
 
     @RequestMapping(value = "{slug}/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserModel>> getUsers(@PathVariable(value = "slug") final String slug,
+    public ResponseEntity getUsers(@PathVariable(value = "slug") final String slug,
                                                     @RequestParam(value = "limit", required = false) final Integer limit,
                                                     @RequestParam(value = "since", required = false) final String since,
                                                     @RequestParam(value = "desc", required = false) final Boolean desc) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        try {
+            List<UserModel> result = forumService.getUsers(slug, limit, since, desc);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
 }
