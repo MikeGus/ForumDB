@@ -78,10 +78,10 @@ public class ThreadQueries {
                 "WHERE p.thread_id = ? ");
 
         String order = " ";
-        String sign = " < ";
+        String sign = " > ";
 
         if (desc == Boolean.TRUE) {
-            sign = " > ";
+            sign = " < ";
             order = " DESC ";
         }
 
