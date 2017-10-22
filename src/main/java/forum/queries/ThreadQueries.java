@@ -56,4 +56,6 @@ public class ThreadQueries {
     public static String checkPreviousVote = "SELECT voice FROM votes WHERE user_id = ? AND thread_id = ?";
 
     public static String updateVote = "UPDATE votes SET voice = ? WHERE user_id = ? AND thread_id = ?";
+
+    public static String checkThreadPresence = "SELECT id FROM threads WHERE id = ?";
 }

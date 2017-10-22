@@ -36,7 +36,8 @@ public class PostService {
 
     public List<PostModel> create(final String slug_or_id, final List<PostModel> posts) {
 
-        Integer threadId = slug_or_id.matches("\\d+") ? Integer.valueOf(slug_or_id) :
+        Integer threadId = slug_or_id.matches("\\d+") ?
+                template.queryForObject(ThreadQueries.checkThreadPresence, Integer.class, Integer.valueOf(slug_or_id)) :
                 template.queryForObject(ThreadQueries.getThreadIdBySlug, Integer.class, slug_or_id);
 
 
