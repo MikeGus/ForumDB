@@ -46,8 +46,14 @@ public class ThreadController {
 
     @RequestMapping(value = "{slug_or_id}/details", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ThreadModel> getThread(@PathVariable(value = "slug_or_id") final String slug_or_id) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity getThread(@PathVariable(value = "slug_or_id") final String slug_or_id) {
+        try {
+            ThreadModel result = threadService.getBySlugOrId(slug_or_id);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
+        }
+
     }
 
     @RequestMapping(value = "{slug_or_id}/details", method = RequestMethod.POST,
