@@ -13,6 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -48,12 +50,17 @@ public class PostService {
         Integer forumId = template.queryForObject(ThreadQueries.getForumIdByThreadSlugOrId(slug_or_id),
                 Integer.class, slug_or_id);
 
+        String currentTime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 
         List<Object> params = new ArrayList<>();
         for (PostModel post : posts) {
             Integer user_id = template.queryForObject(UserQueries.getIdByNickname, Integer.class, post.getAuthor());
             params.add(user_id);
-            params.add(post.getCreated());
+            if (post.getCreated() != null) {
+                params.add(post.getCreated());
+            } else {
+                params.add(currentTime);
+            }
             params.add(forumId);
             params.add(post.getMessage());
             Integer id = 0;

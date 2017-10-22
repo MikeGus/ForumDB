@@ -58,4 +58,43 @@ public class ThreadQueries {
     public static String updateVote = "UPDATE votes SET voice = ? WHERE user_id = ? AND thread_id = ?";
 
     public static String checkThreadPresence = "SELECT id FROM threads WHERE id = ?";
+
+    private String author;
+    private String created;
+    private String forum;
+    private Integer id;
+    private Boolean isEdited;
+    private String message;
+    private Integer parent;
+    private Integer thread;
+
+    public static String getPostsFlat(final Integer limit, final Integer since, final Boolean desc ) {
+
+        StringBuilder builder = new StringBuilder(
+                "SELECT u.nickname, p.created, f.slug, p.id, p.is_edited, p.message, p.parent_id, p.thread_id " +
+                "FROM users u " +
+                "JOIN posts p ON (u.id = p.user_id) " +
+                "JOIN forums f ON (f.id = p.forum_id) " +
+                "WHERE p.thread_id = ? ");
+
+        String order = " ";
+        String sign = " < ";
+
+        if (desc == Boolean.TRUE) {
+            sign = " > ";
+            order = " DESC ";
+        }
+
+        if (since != null) {
+
+            builder.append(" AND p.id").append(sign).append("? ");
+        }
+        builder.append("ORDER BY p.created, p.id ").append(order);
+
+        if (limit != null) {
+            builder.append("LIMIT ?");
+        }
+
+        return builder.toString();
+    }
 }

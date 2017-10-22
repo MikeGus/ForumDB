@@ -1,8 +1,5 @@
 package forum.queries;
 
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-
 /**
  * Created by MikeGus on 15.10.17
  */
@@ -16,7 +13,7 @@ public class PostQueries {
         );
 
         for (Integer i = 0; i < numberOfPosts; ++i) {
-            builder.append("( ?, COALESCE(?::TIMESTAMPTZ, CURRENT_TIMESTAMP), ?, ?, ?, ?)");
+            builder.append("( ?, ?::TIMESTAMPTZ, ?, ?, ?, ?)");
             if (i != numberOfPosts - 1) {
                 builder.append(", ");
             }

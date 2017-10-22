@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -65,12 +66,17 @@ public class ThreadController {
 
     @RequestMapping(value = "{slug_or_id}/posts", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PostModel>> getPostsSorted(@PathVariable(value = "slug_or_id") final String slug_or_id,
-                                                          @RequestParam(value = "limit") final Integer limit,
-                                                          @RequestParam(value = "since") final Integer since,
-                                                          @RequestParam(value = "sort") final String sort,
-                                                          @RequestParam(value = "desc") final Boolean desc) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity getPostsSorted(@PathVariable(value = "slug_or_id") final String slug_or_id,
+                                                          @RequestParam(value = "limit", required = false) final Integer limit,
+                                                          @RequestParam(value = "since", required = false) final Integer since,
+                                                          @RequestParam(value = "sort", required = false) final String sort,
+                                                          @RequestParam(value = "desc", required = false) final Boolean desc) {
+        try {
+            List<PostModel> result = threadService.getPosts(slug_or_id, limit, since, sort, desc);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(ex.getMessage()));
+        }
     }
 
     @RequestMapping(value = "{slug_or_id}/vote", method = RequestMethod.POST,

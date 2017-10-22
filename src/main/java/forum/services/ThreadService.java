@@ -8,8 +8,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static forum.rowmappers.RowMapperCollection.readPost;
 import static forum.rowmappers.RowMapperCollection.readThread;
 
 /**
@@ -52,10 +54,28 @@ public class ThreadService {
         return threadDB;
     }
 
-//    todo
     public List<PostModel> getPosts(final String slug_or_id, final Integer limit, final Integer since, final String sort,
                                     final Boolean desc) {
-        return null;
+
+        ThreadModel thread = getBySlugOrId(slug_or_id);
+
+        List<Object> arguments = new ArrayList<>();
+
+        arguments.add(thread.getId());
+        if (since != null) {
+            arguments.add(since);
+        }
+        if (limit != null) {
+            arguments.add(limit);
+        }
+
+        switch (sort) {
+            case "flat" :
+                return template.query(ThreadQueries.getPostsFlat(limit, since, desc), arguments.toArray(), readPost);
+            default:
+                break;
+        }
+        return template.query(ThreadQueries.getPostsFlat(limit, since, desc), arguments.toArray(), readPost);
     }
 
     @SuppressWarnings("ConstantConditions")

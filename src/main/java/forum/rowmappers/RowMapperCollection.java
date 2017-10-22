@@ -17,14 +17,15 @@ import java.util.TimeZone;
 public class RowMapperCollection {
 
     public static RowMapper<PostModel> readPost = (rs, i) -> {
-        final Timestamp ts = rs.getTimestamp("p.created");
+        final Timestamp ts = rs.getTimestamp("created");
         final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        return new PostModel(rs.getString("u.nickname"), df.format(ts.getTime()),
-                rs.getString("f.slug"), rs.getInt("p.id"),
-                rs.getBoolean("p.is_edited"), rs.getString("p.message"),
-                rs.getInt("p.parent"), rs.getInt("p.thread"));
+        PostModel result = new PostModel(rs.getString("nickname"), df.format(ts.getTime()),
+                rs.getString("slug"), rs.getInt("id"),
+                rs.getBoolean("is_edited"), rs.getString("message"),
+                rs.getInt("parent_id"), rs.getInt("thread_id"));
+        return  result;
     };
 
     public static RowMapper<ThreadModel> readThread = (rs, i) -> {
