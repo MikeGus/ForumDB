@@ -111,8 +111,7 @@ public class ThreadQueries {
         builder.append(" p.message, p.parent_id, p.thread_id ");
         builder.append("FROM users u JOIN posts p ON (u.id = p.user_id) ");
         builder.append("JOIN forums f ON (f.id = p.forum_id) ");
-        builder.append("WHERE p.thread_id = ? AND p.id IN (SELECT id FROM posts WHERE parent_id=0 ORDER BY id ");
-        builder.append(" OR )p.path[1] IN (SELECT id FROM posts WHERE parent_id=0 ORDER BY id ");
+        builder.append("WHERE p.thread_id = ? AND p.root_id IN (SELECT id FROM posts WHERE parent_id=0 ORDER BY id ");
         if (limit != null) {
             builder.append(" LIMIT ?");
         }
@@ -122,7 +121,7 @@ public class ThreadQueries {
         String sign = (desc == Boolean.TRUE ? " < " : " > ");
 
         if (since != null) {
-            builder.append(" AND p.id").append(sign).append("? ");
+            builder.append(" AND p.path").append(sign).append("(SELECT path FROM posts WHERE id = ?) ");
         }
         builder.append("ORDER BY array_append(p.path, p.id) ").append(order);
 

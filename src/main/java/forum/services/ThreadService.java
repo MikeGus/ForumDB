@@ -75,6 +75,16 @@ public class ThreadService {
         List<Object> arguments = new ArrayList<>();
         arguments.add(thread.getId());
 
+        if (sort == null) {
+            if (since != null) {
+                arguments.add(since);
+            }
+            if (limit != null) {
+                arguments.add(limit);
+            }
+            return template.query(ThreadQueries.getPostsFlat(limit, since, desc), arguments.toArray(), readPost);
+        }
+
         switch (sort) {
             case "flat" :
                 if (since != null) {
@@ -93,17 +103,22 @@ public class ThreadService {
                 }
                 return template.query(ThreadQueries.getPostsTree(limit,since,desc), arguments.toArray(), readPost);
             case "parent_tree" :
+                if (limit != null) {
+                    arguments.add(limit);
+                }
+                if (since != null) {
+                    arguments.add(since);
+                }
+                return template.query(ThreadQueries.getPostsParentTree(limit, since, desc), arguments.toArray(), readPost);
+            default:
                 if (since != null) {
                     arguments.add(since);
                 }
                 if (limit != null) {
                     arguments.add(limit);
                 }
-                return template.query(ThreadQueries.getPostsParentTree(limit, since, desc), arguments.toArray(), readPost);
-            default:
-                break;
+                return template.query(ThreadQueries.getPostsFlat(limit, since, desc), arguments.toArray(), readPost);
         }
-        return template.query(ThreadQueries.getPostsFlat(limit, since, desc), arguments.toArray(), readPost);
     }
 
     @SuppressWarnings("ConstantConditions")
