@@ -45,11 +45,23 @@ public class ThreadService {
     }
 
     public ThreadModel update(final String slug_or_id, final ThreadUpdateModel thread) {
-        ThreadModel threadDB = getBySlugOrId(slug_or_id);
-        threadDB.setMessage(thread.getMessage());
-        threadDB.setTitle(thread.getTitle());
 
-        template.update(ThreadQueries.update(), threadDB.getTitle(), threadDB.getMessage(), threadDB.getId());
+        ThreadModel threadDB = getBySlugOrId(slug_or_id);
+
+        Integer notNullFields = 0;
+
+        if (thread.getMessage() != null) {
+            notNullFields++;
+            threadDB.setMessage(thread.getMessage());
+        }
+        if (thread.getTitle() != null) {
+            notNullFields++;
+            threadDB.setTitle(thread.getTitle());
+        }
+
+        if (notNullFields > 0) {
+            template.update(ThreadQueries.update(), threadDB.getTitle(), threadDB.getMessage(), threadDB.getId());
+        }
 
         return threadDB;
     }

@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -59,9 +58,14 @@ public class ThreadController {
 
     @RequestMapping(value = "{slug_or_id}/details", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ThreadModel> updateThread(@PathVariable(value = "slug_or_id") final String slug_or_id,
+    public ResponseEntity updateThread(@PathVariable(value = "slug_or_id") final String slug_or_id,
                                                     @RequestBody final ThreadUpdateModel threadUpdate) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        try {
+            ThreadModel result = threadService.update(slug_or_id, threadUpdate);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
+        }
     }
 
     @RequestMapping(value = "{slug_or_id}/posts", method = RequestMethod.GET,
