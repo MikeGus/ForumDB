@@ -62,6 +62,10 @@ public class PostService {
                 params.add(currentTime);
             }
             params.add(forumId);
+
+            Integer postId = template.queryForObject(PostQueries.getNextId, Integer.class);
+            params.add(postId);
+
             params.add(post.getMessage());
             Integer id = 0;
             if (post.getParent() != null && post.getParent() != 0) {
@@ -81,7 +85,7 @@ public class PostService {
             else {
                 params.add(template.queryForObject(PostQueries.getPath, Array.class, id));
             }
-            params.add(id);
+            params.add(postId);
         }
 
         String forumSlug = template.queryForObject(ForumQueries.getSlugById, String.class, forumId);

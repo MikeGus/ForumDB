@@ -9,11 +9,11 @@ public class PostQueries {
     public static String create(final Integer numberOfPosts) {
 
         StringBuilder builder = new StringBuilder(
-                "INSERT INTO posts (user_id, created, forum_id, message, parent_id, thread_id, path) VALUES "
+                "INSERT INTO posts (user_id, created, forum_id, id, message, parent_id, thread_id, path) VALUES "
         );
 
         for (Integer i = 0; i < numberOfPosts; ++i) {
-            builder.append("( ?, ?::TIMESTAMPTZ, ?, ?, ?, ?, array_append(?, ?::BIGINT))");
+            builder.append("( ?, ?::TIMESTAMPTZ, ?, ?, ?, ?, ?, array_append(?, ?::BIGINT))");
             if (i != numberOfPosts - 1) {
                 builder.append(", ");
             }
@@ -44,4 +44,6 @@ public class PostQueries {
     public static String checkParentId = "SELECT id FROM posts WHERE id = ? AND thread_id = ?";
 
     public static String getPath = "SELECT path FROM posts WHERE id = ?";
+
+    public static String getNextId = "SELECT nextval(pg_get_serial_sequence('posts', 'id'))";
 }
