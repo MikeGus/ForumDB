@@ -92,7 +92,7 @@ public class ForumController {
             List<UserModel> result = forumService.getUsers(slug, limit, since, desc);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (DataAccessException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
         }
     }
 }

@@ -21,11 +21,10 @@ public class RowMapperCollection {
         final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        PostModel result = new PostModel(rs.getString("nickname"), df.format(ts.getTime()),
+        return new PostModel(rs.getString("nickname"), df.format(ts.getTime()),
                 rs.getString("slug"), rs.getInt("id"),
                 rs.getBoolean("is_edited"), rs.getString("message"),
                 rs.getInt("parent_id"), rs.getInt("thread_id"));
-        return  result;
     };
 
     public static RowMapper<ThreadModel> readThread = (rs, i) -> {

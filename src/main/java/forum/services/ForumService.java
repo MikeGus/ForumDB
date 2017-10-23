@@ -62,9 +62,11 @@ public class ForumService {
 
     public List<UserModel> getUsers(final String slug, final Integer limit, final String since, final Boolean desc) {
 
+        Integer forumId = template.queryForObject(ForumQueries.getIdBySlug, Integer.class, slug);
+
         List<Object> args = new ArrayList<>();
         for (int i = 0; i < 2; ++i) {
-            args.add(slug);
+            args.add(forumId);
             if (since != null) {
                 args.add(since);
             }
