@@ -18,24 +18,20 @@ public class ForumQueries {
     public static String clear = "DELETE FROM forums";
 
     public static String getThreads(final Integer limit, final String since, final Boolean desc) {
-        StringBuilder builder = new StringBuilder(
-                        "SELECT u.nickname AS author, t.created, f.slug AS forum, t.id, t.message, t.slug, t.title, t.votes " +
-                        "FROM threads t " +
-                        "JOIN users u ON (t.user_id = u.id) " +
-                        "JOIN forums f ON (f.id = t.forum_id) " +
-                        "WHERE LOWER(f.slug) = LOWER(?) "
-        );
+        StringBuilder builder = new StringBuilder("SELECT u.nickname AS author, t.created, f.slug AS forum, ");
+        builder.append("t.id, t.message, t.slug, t.title, t.votes ");
+        builder.append("FROM threads t JOIN users u ON (t.user_id = u.id) ");
+        builder.append("JOIN forums f ON (f.id = t.forum_id) ");
+        builder.append("WHERE LOWER(f.slug) = LOWER(?) ");
+
+        String sign = (desc == Boolean.TRUE ? "<= " : ">= ");
 
         if (since != null) {
-            if (desc == Boolean.TRUE) {
-                builder.append("AND t.created <= ?::TIMESTAMPTZ ");
-            }
-            else{
-                builder.append("AND t.created >= ?::TIMESTAMPTZ ");
-            }
+            builder.append("AND t.created ").append(sign).append("?::TIMESTAMPTZ ");
         }
 
         builder.append("ORDER BY t.created ");
+
         if (desc == Boolean.TRUE) {
             builder.append("DESC ");
         }
