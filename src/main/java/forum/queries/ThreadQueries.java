@@ -119,7 +119,7 @@ public class ThreadQueries {
         if (since != null) {
             builder.append(" AND path ").append(sign).append("(SELECT path FROM posts WHERE id = ?) ");
         }
-        builder.append("ORDER BY id ");
+        builder.append("ORDER BY id ").append(order);
 
         if (limit != null) {
             builder.append(" LIMIT ?");
