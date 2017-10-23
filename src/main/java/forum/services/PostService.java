@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Array;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import static forum.rowmappers.RowMapperCollection.*;
  * Created by MikeGus on 15.10.17
  */
 
+@SuppressWarnings("ConstantConditions")
 @Transactional
 @Service
 public class PostService {
@@ -50,6 +52,7 @@ public class PostService {
         String currentTime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 
         List<Object> params = new ArrayList<>();
+        
         for (PostModel post : posts) {
             Integer user_id = template.queryForObject(UserQueries.getIdByNickname, Integer.class, post.getAuthor());
             params.add(user_id);
@@ -72,6 +75,13 @@ public class PostService {
             post.setParent(id);
             params.add(id);
             params.add(threadId);
+            if (id == 0) {
+                params.add(null);
+            }
+            else {
+                params.add(template.queryForObject(PostQueries.getPath, Array.class, id));
+            }
+            params.add(id);
         }
 
         String forumSlug = template.queryForObject(ForumQueries.getSlugById, String.class, forumId);

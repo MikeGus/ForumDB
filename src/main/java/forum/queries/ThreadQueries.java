@@ -59,34 +59,18 @@ public class ThreadQueries {
 
     public static String checkThreadPresence = "SELECT id FROM threads WHERE id = ?";
 
-    private String author;
-    private String created;
-    private String forum;
-    private Integer id;
-    private Boolean isEdited;
-    private String message;
-    private Integer parent;
-    private Integer thread;
-
     public static String getPostsFlat(final Integer limit, final Integer since, final Boolean desc ) {
 
-        StringBuilder builder = new StringBuilder(
-                "SELECT u.nickname, p.created, f.slug, p.id, p.is_edited, p.message, p.parent_id, p.thread_id " +
-                "FROM users u " +
-                "JOIN posts p ON (u.id = p.user_id) " +
-                "JOIN forums f ON (f.id = p.forum_id) " +
-                "WHERE p.thread_id = ? ");
+        StringBuilder builder = new StringBuilder("SELECT u.nickname, p.created, f.slug, p.id, p.is_edited,");
+        builder.append(" p.message, p.parent_id, p.thread_id ");
+        builder.append("FROM users u JOIN posts p ON (u.id = p.user_id) ");
+        builder.append("JOIN forums f ON (f.id = p.forum_id) ");
+        builder.append("WHERE p.thread_id = ? ");
 
-        String order = " ";
-        String sign = " > ";
-
-        if (desc == Boolean.TRUE) {
-            sign = " < ";
-            order = " DESC ";
-        }
+        String order = (desc == Boolean.TRUE ? " DESC " : " ASC ");
+        String sign = (desc == Boolean.TRUE ? " < " : " > ");
 
         if (since != null) {
-
             builder.append(" AND p.id").append(sign).append("? ");
         }
         builder.append("ORDER BY p.created, p.id ").append(order);
@@ -94,6 +78,54 @@ public class ThreadQueries {
         if (limit != null) {
             builder.append("LIMIT ?");
         }
+
+        return builder.toString();
+    }
+
+    public static String getPostsTree(final Integer limit, final Integer since, final Boolean desc ) {
+
+        StringBuilder builder = new StringBuilder("SELECT u.nickname, p.created, f.slug, p.id, p.is_edited,");
+        builder.append(" p.message, p.parent_id, p.thread_id ");
+        builder.append("FROM users u JOIN posts p ON (u.id = p.user_id) ");
+        builder.append("JOIN forums f ON (f.id = p.forum_id) ");
+        builder.append("WHERE p.thread_id = ? ");
+
+        String order = (desc == Boolean.TRUE ? " DESC " : " ASC ");
+        String sign = (desc == Boolean.TRUE ? " < " : " > ");
+
+        if (since != null) {
+            builder.append(" AND p.id").append(sign).append("? ");
+        }
+        builder.append("ORDER BY array_append(p.path, p.id) ").append(order);
+
+        if (limit != null) {
+            builder.append("LIMIT ?");
+        }
+
+        return builder.toString();
+    }
+
+    public static String getPostsParentTree(final Integer limit, final Integer since, final Boolean desc ) {
+
+        StringBuilder builder = new StringBuilder("SELECT u.nickname, p.created, f.slug, p.id, p.is_edited,");
+        builder.append(" p.message, p.parent_id, p.thread_id ");
+        builder.append("FROM users u JOIN posts p ON (u.id = p.user_id) ");
+        builder.append("JOIN forums f ON (f.id = p.forum_id) ");
+        builder.append("WHERE p.thread_id = ? AND p.id IN (SELECT id FROM posts WHERE parent_id=0 ORDER BY id ");
+        builder.append(" OR )p.path[1] IN (SELECT id FROM posts WHERE parent_id=0 ORDER BY id ");
+        if (limit != null) {
+            builder.append(" LIMIT ?");
+        }
+        builder.append(") ");
+
+        String order = (desc == Boolean.TRUE ? " DESC " : " ASC ");
+        String sign = (desc == Boolean.TRUE ? " < " : " > ");
+
+        if (since != null) {
+            builder.append(" AND p.id").append(sign).append("? ");
+        }
+        builder.append("ORDER BY array_append(p.path, p.id) ").append(order);
+
 
         return builder.toString();
     }

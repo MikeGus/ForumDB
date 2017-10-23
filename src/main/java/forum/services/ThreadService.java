@@ -71,19 +71,35 @@ public class ThreadService {
 
         ThreadModel thread = getBySlugOrId(slug_or_id);
 
-        List<Object> arguments = new ArrayList<>();
 
+        List<Object> arguments = new ArrayList<>();
         arguments.add(thread.getId());
-        if (since != null) {
-            arguments.add(since);
-        }
-        if (limit != null) {
-            arguments.add(limit);
-        }
 
         switch (sort) {
             case "flat" :
+                if (since != null) {
+                    arguments.add(since);
+                }
+                if (limit != null) {
+                    arguments.add(limit);
+                }
                 return template.query(ThreadQueries.getPostsFlat(limit, since, desc), arguments.toArray(), readPost);
+            case "tree" :
+                if (since != null) {
+                    arguments.add(since);
+                }
+                if (limit != null) {
+                    arguments.add(limit);
+                }
+                return template.query(ThreadQueries.getPostsTree(limit,since,desc), arguments.toArray(), readPost);
+            case "parent_tree" :
+                if (since != null) {
+                    arguments.add(since);
+                }
+                if (limit != null) {
+                    arguments.add(limit);
+                }
+                return template.query(ThreadQueries.getPostsParentTree(limit, since, desc), arguments.toArray(), readPost);
             default:
                 break;
         }

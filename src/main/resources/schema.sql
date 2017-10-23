@@ -1,11 +1,13 @@
 -- noinspection SqlResolveForFile
 
+SET SYNCHRONOUS_COMMIT = 'off';
+
 CREATE EXTENSION IF NOT EXISTS CITEXT;
 
-DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS users  CASCADE;
 DROP TABLE IF EXISTS forums CASCADE;
 DROP TABLE IF EXISTS threads CASCADE;
-DROP TABLE IF EXISTS posts CASCADE;
+DROP TABLE IF EXISTS posts  CASCADE;
 DROP TABLE IF EXISTS votes  CASCADE;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -44,8 +46,9 @@ CREATE TABLE IF NOT EXISTS posts (
   id        BIGSERIAL   PRIMARY KEY,
   is_edited BOOLEAN     NOT NULL DEFAULT FALSE,
   message   TEXT                                                NOT NULL,
-  parent_id BIGINT      DEFAULT 0,
-  thread_id INTEGER     REFERENCES threads(id) ON DELETE CASCADE
+  parent_id BIGINT      DEFAULT 0                               NOT NULL,
+  thread_id INTEGER     REFERENCES threads(id) ON DELETE CASCADE,
+  path      BIGINT[]  NOT NULL
 );
 
 
