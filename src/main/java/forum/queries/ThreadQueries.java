@@ -94,7 +94,7 @@ public class ThreadQueries {
         String sign = (desc == Boolean.TRUE ? " < " : " > ");
 
         if (since != null) {
-            builder.append(" AND p.id ").append(sign).append("? ");
+            builder.append(" AND p.path ").append(sign).append("(SELECT path FROM posts WHERE id = ?) ");
         }
         builder.append("ORDER BY p.path ").append(order);
 
