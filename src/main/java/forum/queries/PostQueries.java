@@ -25,7 +25,8 @@ public class PostQueries {
 
     public static String update = "UPDATE posts SET message = ?, is_edited = TRUE WHERE id = ?";
 
-    public static String getById = "SELECT u.nickname, p.created, f.slug, p.id, p.is_edited, p.message, p.parent, p.thread " +
+    public static String getById =
+            "SELECT u.nickname, p.created, f.slug, p.id, p.is_edited, p.message, p.parent_id, p.thread_id " +
                 "FROM posts p " +
                 "JOIN users u ON (p.user_id = u.id) " +
                 "JOIN forums f ON (p.forum_id = f.id) " +

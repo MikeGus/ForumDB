@@ -1,6 +1,7 @@
 package forum.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.catalina.User;
 
 /**
  * Created by MikeGus on 11.10.17
@@ -38,5 +39,21 @@ public class PostFullModel {
 
     public ThreadModel getThread() {
         return thread;
+    }
+
+    public void setAuthor(UserModel user) {
+        this.author = user;
+    }
+
+    public void setForum(ForumModel forum) {
+        this.forum = forum;
+    }
+
+    public void setPost(PostModel post) {
+        this.post = post;
+    }
+
+    public void setThread(ThreadModel thread) {
+        this.thread = thread;
     }
 }

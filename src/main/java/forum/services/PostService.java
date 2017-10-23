@@ -1,13 +1,10 @@
 package forum.services;
 
-import forum.models.PostModel;
-import forum.models.PostFullModel;
-import forum.models.PostUpdateModel;
+import forum.models.*;
 import forum.queries.ForumQueries;
 import forum.queries.PostQueries;
 import forum.queries.ThreadQueries;
 import forum.queries.UserQueries;
-import forum.rowmappers.RowMapperCollection;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -20,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static forum.rowmappers.RowMapperCollection.readPostData;
+import static forum.rowmappers.RowMapperCollection.*;
 
 /**
  * Created by MikeGus on 15.10.17
@@ -100,14 +97,40 @@ public class PostService {
         return posts;
     }
 
-//    todo
-    public PostFullModel getByIdFull(final Integer id, String[] related) {
-       return null;
+    @SuppressWarnings("ConstantConditions")
+    public PostFullModel getByIdFull(final Integer id, List<String> related) {
+
+        PostModel post = template.queryForObject(PostQueries.getById, readPost, id);
+        PostFullModel result = new PostFullModel(null, null, null, null);
+        result.setPost(post);
+        
+        if (related != null) {
+            for (String elem : related) {
+                switch (elem) {
+                    case "user":
+                        UserModel author = template.queryForObject(UserQueries.getByNickname, readUser, post.getAuthor());
+                        result.setAuthor(author);
+                        break;
+                    case "forum":
+                        ForumModel forum = template.queryForObject(ForumQueries.getBySlug, readForum, post.getForum());
+                        result.setForum(forum);
+                        break;
+                    case "thread":
+                        ThreadModel thread = template.queryForObject(ThreadQueries.getById, readThread, post.getThread());
+                        result.setThread(thread);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        
+        return result;
     }
 
     public PostModel update(final Integer id, final PostUpdateModel post) {
         template.update(PostQueries.update, post.getMessage(), id);
-        return template.queryForObject(PostQueries.getById, RowMapperCollection.readPost, id);
+        return template.queryForObject(PostQueries.getById, readPost, id);
     }
 
     public Integer status() {
