@@ -128,9 +128,17 @@ public class PostService {
         return result;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public PostModel update(final Integer id, final PostUpdateModel post) {
+        PostModel result = template.queryForObject(PostQueries.getById, readPost, id);
+
+        if (post.getMessage() == null || post.getMessage().equals(result.getMessage())) {
+            return result;
+        }
         template.update(PostQueries.update, post.getMessage(), id);
-        return template.queryForObject(PostQueries.getById, readPost, id);
+        result.setMessage(post.getMessage());
+        result.setIsEdited(Boolean.TRUE);
+        return result;
     }
 
     public Integer status() {
