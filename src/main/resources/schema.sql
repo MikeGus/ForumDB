@@ -48,7 +48,8 @@ CREATE TABLE IF NOT EXISTS posts (
   message   TEXT                                                NOT NULL,
   parent_id BIGINT      DEFAULT 0                               NOT NULL,
   thread_id INTEGER     REFERENCES threads(id) ON DELETE CASCADE,
-  path      BIGINT[]  NOT NULL
+  path      BIGINT[]    NOT NULL,
+  root_id   BIGINT      NOT NULL
 );
 
 

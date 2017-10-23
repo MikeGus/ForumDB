@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -30,6 +31,7 @@ public class ThreadController {
     @Autowired
     private PostService postService;
 
+    @SuppressWarnings("TryWithIdenticalCatches")
     @RequestMapping(value = "{slug_or_id}/create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createPosts(@PathVariable(value = "slug_or_id") final String slug_or_id,
@@ -39,6 +41,8 @@ public class ThreadController {
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (IncorrectResultSizeDataAccessException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorModel(ex.getMessage()));
+        } catch (SQLException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorModel(ex.getMessage()));
         } catch (NoSuchElementException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorModel(ex.getMessage()));
         }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Array;
+import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class PostService {
         this.template = template;
     }
 
-    public List<PostModel> create(final String slug_or_id, final List<PostModel> posts) {
+    public List<PostModel> create(final String slug_or_id, final List<PostModel> posts) throws SQLException {
 
         Integer threadId = slug_or_id.matches("\\d+") ?
                 template.queryForObject(ThreadQueries.checkThreadPresence, Integer.class, Integer.valueOf(slug_or_id)) :
@@ -79,13 +80,19 @@ public class PostService {
             post.setParent(id);
             params.add(id);
             params.add(threadId);
+
             if (id == 0) {
                 params.add(null);
+                params.add(postId);
+                params.add(postId);
             }
             else {
-                params.add(template.queryForObject(PostQueries.getPath, Array.class, id));
+                Array array = template.queryForObject(PostQueries.getPath, Array.class, id);
+                params.add(array);
+                params.add(postId);
+                params.add(((Long[]) array.getArray())[0]);
             }
-            params.add(postId);
+
         }
 
         String forumSlug = template.queryForObject(ForumQueries.getSlugById, String.class, forumId);

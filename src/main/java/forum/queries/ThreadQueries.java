@@ -94,9 +94,9 @@ public class ThreadQueries {
         String sign = (desc == Boolean.TRUE ? " < " : " > ");
 
         if (since != null) {
-            builder.append(" AND p.id").append(sign).append("? ");
+            builder.append(" AND p.id ").append(sign).append("? ");
         }
-        builder.append("ORDER BY array_append(p.path, p.id) ").append(order);
+        builder.append("ORDER BY p.path ").append(order);
 
         if (limit != null) {
             builder.append("LIMIT ?");
