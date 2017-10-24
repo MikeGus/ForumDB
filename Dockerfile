@@ -6,7 +6,7 @@ MAINTAINER m.gusev
 RUN apt-get -y update
 
 #postgresql
-ENV PGVER 10.0
+ENV PGVER 9.5
 RUN apt-get install -y postgresql-$PGVER
 
 # Run the rest of the commands as the ``postgres`` user created by the ``postgres-$PGVER`` package when it was ``apt-get installed``
@@ -36,13 +36,12 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 # Back to the root user
 USER root
 
-
 # JDK
 RUN apt-get install -y openjdk-8-jdk-headless
 RUN apt-get install -y maven
 
 # copy to Docker container
-ENV WORK /root/ForumDB
+ENV WORK /opt/ForumDB
 ADD ./ $WORK/
 
 # build and run
