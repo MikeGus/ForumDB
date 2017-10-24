@@ -42,11 +42,11 @@ RUN apt-get install -y openjdk-8-jdk-headless
 RUN apt-get install -y maven
 
 # copy to Docker container
-ENV WORK /opt/ForumDB
-ADD ForumDB/ $WORK/ForumDB/
+ENV WORK /root/ForumDB
+ADD ./ $WORK/
 
 # build and run
-WORKDIR $WORK/ForumDB
+WORKDIR $WORK
 RUN mvn package
 
 # port
@@ -55,4 +55,4 @@ EXPOSE 5000
 #
 # start
 #
-CMD service postgresql start && java -Xmx300M -Xmx300M -jar $WORK/ForumDB/target/ForumDB-1.0-SNAPSHOT.jar
+CMD service postgresql start && java -Xmx300M -Xmx300M -jar $WORK/target/ForumDB-1.0-SNAPSHOT.jar
