@@ -28,7 +28,7 @@ public class ThreadQueries {
 
     public static String status = "SELECT COUNT(*) FROM threads";
 
-    public static String clear = "DELETE FROM threads";
+    public static String clear = "TRUNCATE threads CASCADE";
 
     public static String getForumIdByThreadSlugOrId(final String slug_or_id) {
         if (slug_or_id.matches("\\d+")) {

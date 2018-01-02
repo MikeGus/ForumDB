@@ -34,7 +34,7 @@ public class PostQueries {
 
     public static String status = "SELECT COUNT(*) FROM posts";
 
-    public static String clear = "DELETE FROM posts";
+    public static String clear = "TRUNCATE posts CASCADE";
 
     public static String updatePostCount =
                 "UPDATE forums " +

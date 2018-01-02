@@ -15,7 +15,7 @@ public class ForumQueries {
 
     public static String status = "SELECT COUNT(*) FROM forums";
 
-    public static String clear = "DELETE FROM forums";
+    public static String clear = "TRUNCATE forums CASCADE";
 
     public static String getThreads(final Integer limit, final String since, final Boolean desc) {
         StringBuilder builder = new StringBuilder("SELECT u.nickname AS author, t.created, f.slug AS forum, ");
