@@ -7,18 +7,16 @@ package forum.queries;
 @SuppressWarnings("WeakerAccess")
 public class ThreadQueries {
 
-    public static String create = "INSERT INTO threads (user_id, created, forum_id, message, slug, title) " +
-        "VALUES ((SELECT id FROM users WHERE nickname = ?), COALESCE(?::TIMESTAMPTZ, CURRENT_TIMESTAMP), " +
-            "(SELECT id FROM forums WHERE LOWER(slug) = LOWER(?)), ?, ?, ?) RETURNING id";
+    public static String create = "INSERT INTO threads (user_id, user_nickname, created, forum_id, forum_slug, message, slug, title) " +
+        "VALUES ((SELECT id FROM users WHERE nickname = ?), ?, COALESCE(?::TIMESTAMPTZ, CURRENT_TIMESTAMP), " +
+            "(SELECT id FROM forums WHERE LOWER(slug) = LOWER(?)), (SELECT slug FROM forums WHERE LOWER(slug) = LOWER(?)), ?, ?, ?) RETURNING id";
 
 
-    public static String getById = "SELECT u.nickname AS author, t.created , f.slug AS forum, t.id, " +
-            "t.message AS message, t.slug AS slug, t.title, t.votes FROM threads t JOIN users u ON (u.id = t.user_id) " +
-            "JOIN forums f ON (f.id = t.forum_id) WHERE t.id = ?";
+    public static String getById = "SELECT t.user_nickname AS author, t.created , forum_slug AS forum, t.id, " +
+            "t.message AS message, t.slug AS slug, t.title, t.votes FROM threads t WHERE t.id = ?";
 
-    public static String getBySlug = "SELECT u.nickname AS author, t.created , f.slug AS forum, t.id," +
-            "t.message AS message, t.slug AS slug, t.title, t.votes FROM threads t JOIN users u ON (u.id = t.user_id) " +
-            "JOIN forums f ON (f.id = t.forum_id) WHERE LOWER(t.slug) = LOWER(?)";
+    public static String getBySlug = "SELECT t.user_nickname AS author, t.created , forum_slug AS forum, t.id," +
+            "t.message AS message, t.slug AS slug, t.title, t.votes FROM threads t WHERE LOWER(t.slug) = LOWER(?)";
 
     public static String update() {
         return "UPDATE threads " +
@@ -34,7 +32,7 @@ public class ThreadQueries {
         if (slug_or_id.matches("\\d+")) {
             return "SELECT f.id " +
                     "FROM threads t "+
-                    "JOIN forums f on (f.id = t.forum_id) " +
+                    "JOIN forums f ON (f.id = t.forum_id) " +
                     "WHERE t.id = ?::INTEGER";
         }
         else {

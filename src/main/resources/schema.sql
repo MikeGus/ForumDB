@@ -22,7 +22,10 @@ DROP INDEX IF EXISTS users_id_idx;
 CREATE INDEX users_id_idx ON users(id);
 
 DROP INDEX IF EXISTS users_nickname_idx;
-CREATE INDEX users_nickname_idx ON users(LOWER(nickname));
+CREATE INDEX users_nickname_idx ON users(nickname);
+
+DROP INDEX IF EXISTS users_lower_nickname_idx;
+CREATE INDEX users_lower_nickname_idx ON users(LOWER(nickname));
 
 DROP INDEX IF EXISTS users_nick_idx;
 CREATE INDEX users_nick_idx ON users(nickname);
@@ -52,8 +55,10 @@ CREATE INDEX forums_user_idx ON forums(user_id);
 
 CREATE TABLE IF NOT EXISTS threads (
   user_id   INTEGER       REFERENCES users(id)  ON DELETE CASCADE NOT NULL,
+  user_nickname CITEXT                                            NOT NULL,
   created   TIMESTAMPTZ   DEFAULT now(),
   forum_id  INTEGER       REFERENCES forums(id) ON DELETE CASCADE NOT NULL,
+  forum_slug    CITEXT                                            NOT NULL,
   id        SERIAL        PRIMARY KEY,
   message   TEXT                                                  NOT NULL,
   slug      CITEXT        UNIQUE DEFAULT NULL,

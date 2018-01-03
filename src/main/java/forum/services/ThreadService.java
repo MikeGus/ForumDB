@@ -30,7 +30,7 @@ public class ThreadService {
 
     public ThreadModel create(final String slug, final ThreadModel thread) {
         Integer id = template.queryForObject(ThreadQueries.create, Integer.class,
-                thread.getAuthor(),thread.getCreated(), slug, thread.getMessage(), thread.getSlug(), thread.getTitle());
+                thread.getAuthor(), thread.getAuthor(), thread.getCreated(), slug, slug, thread.getMessage(), thread.getSlug(), thread.getTitle());
         template.update(ThreadQueries.updateThreadCount, 1, thread.getForum());
         return template.queryForObject(ThreadQueries.getById, readThread, id);
     }
