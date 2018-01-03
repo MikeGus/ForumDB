@@ -19,7 +19,6 @@ public class PostQueries {
             }
         }
 
-        builder.append(" RETURNING created, id");
         return builder.toString();
     }
 

@@ -42,52 +42,55 @@ public class PostService {
                 template.queryForObject(ThreadQueries.checkThreadPresence, Integer.class, Integer.valueOf(slug_or_id)) :
                 template.queryForObject(ThreadQueries.getThreadIdBySlug, Integer.class, slug_or_id);
 
-
         if (posts.size() == 0) {
             return posts;
         }
 
         Integer forumId = template.queryForObject(ThreadQueries.getForumIdByThreadSlugOrId(slug_or_id),
                 Integer.class, slug_or_id);
+        String forumSlug = template.queryForObject(ForumQueries.getSlugById, String.class, forumId);
 
         String currentTime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 
         List<Object> params = new ArrayList<>();
-        
+
         for (PostModel post : posts) {
+
+            post.setForum(forumSlug);
+            post.setThread(threadId);
+            post.setCreated(currentTime);
+
             Integer user_id = template.queryForObject(UserQueries.getIdByNickname, Integer.class, post.getAuthor());
             params.add(user_id);
-            if (post.getCreated() != null) {
-                params.add(post.getCreated());
-            } else {
-                params.add(currentTime);
-            }
+            params.add(currentTime);
             params.add(forumId);
 
             Integer postId = template.queryForObject(PostQueries.getNextId, Integer.class);
+            post.setId(postId);
+
             params.add(postId);
 
             params.add(post.getMessage());
-            Integer id = 0;
+            Integer parentId = 0;
             if (post.getParent() != null && post.getParent() != 0) {
                 try {
-                    id = template.queryForObject(PostQueries.checkParentId, Integer.class, post.getParent(),
+                    parentId = template.queryForObject(PostQueries.checkParentId, Integer.class, post.getParent(),
                             threadId);
                 } catch (IncorrectResultSizeDataAccessException ex) {
                     throw new NoSuchElementException("Parent not found!");
                 }
             }
-            post.setParent(id);
-            params.add(id);
+            post.setParent(parentId);
+            params.add(parentId);
             params.add(threadId);
 
-            if (id == 0) {
+            if (parentId == 0) {
                 params.add(null);
                 params.add(postId);
                 params.add(postId);
             }
             else {
-                Array array = template.queryForObject(PostQueries.getPath, Array.class, id);
+                Array array = template.queryForObject(PostQueries.getPath, Array.class, parentId);
                 params.add(array);
                 params.add(postId);
                 params.add(((Long[]) array.getArray())[0]);
@@ -95,30 +98,12 @@ public class PostService {
 
         }
 
-        String forumSlug = template.queryForObject(ForumQueries.getSlugById, String.class, forumId);
-        List<PostModel> list = template.query(PostQueries.create(posts.size()), readPostData,
-                params.toArray());
-
-        Iterator<PostModel> dest = posts.iterator();
-        Iterator<PostModel> src = list.iterator();
-        while (dest.hasNext() && src.hasNext()) {
-            PostModel destPost = dest.next();
-            PostModel srcPost = src.next();
-
-            destPost.setCreated(srcPost.getCreated());
-            destPost.setIsEdited(Boolean.FALSE);
-
-            destPost.setId(srcPost.getId());
-            destPost.setForum(forumSlug);
-            destPost.setThread(threadId);
-        }
-
+        template.update(PostQueries.create(posts.size()), params.toArray());
         template.update(PostQueries.updatePostCount, posts.size(), forumId);
 
         return posts;
     }
 
-    @SuppressWarnings("ConstantConditions")
     public PostFullModel getByIdFull(final Integer id, List<String> related) {
 
         PostModel post = template.queryForObject(PostQueries.getById, readPost, id);
