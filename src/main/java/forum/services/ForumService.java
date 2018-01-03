@@ -29,7 +29,7 @@ public class ForumService {
     }
 
     public ForumModel create(final ForumModel forum) {
-        template.update(ForumQueries.create, forum.getSlug(), forum.getTitle(), forum.getUser());
+        template.update(ForumQueries.create, forum.getSlug(), forum.getTitle(), forum.getUser(), forum.getUser());
         return getBySlug(forum.getSlug());
     }
 

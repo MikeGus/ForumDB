@@ -6,12 +6,12 @@ package forum.queries;
 
 public class ForumQueries {
 
-    public static String create = "INSERT INTO forums (slug, title, user_id) " +
-            "VALUES (?, ?, (SELECT id FROM users WHERE LOWER(nickname) = LOWER(?)))";
+    public static String create = "INSERT INTO forums (slug, title, user_id, user_nickname) " +
+            "VALUES (?, ?, (SELECT id FROM users WHERE LOWER(nickname) = LOWER(?))," +
+            "(SELECT nickname FROM users WHERE LOWER(nickname) = LOWER(?)))";
 
-    public static String getBySlug = "SELECT f.posts as posts, f.slug as slug, f.threads as threads, " +
-            "f.title as title, u.nickname AS user FROM forums f " +
-            "JOIN users u ON(f.user_id = u.id) WHERE LOWER(f.slug) = LOWER(?)";
+    public static String getBySlug = "SELECT f.posts, f.slug, f.threads, " +
+            "f.title, user_nickname AS user FROM forums f WHERE LOWER(f.slug) = LOWER(?)";
 
     public static String status = "SELECT COUNT(*) FROM forums";
 

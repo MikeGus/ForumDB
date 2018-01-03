@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS forums (
   slug    CITEXT  UNIQUE       NOT NULL,
   threads INTEGER DEFAULT 0,
   title   TEXT                 NOT NULL,
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+  user_nickname CITEXT               NOT NULL
 );
 
 DROP INDEX IF EXISTS forums_id_idx;
