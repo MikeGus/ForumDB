@@ -75,7 +75,7 @@ public class PostService {
             Array array = (parentId == 0) ? null : template.queryForObject(PostQueries.getPath, Array.class, parentId);
 
             Long root = (parentId == 0) ? postId : ((Long[]) array.getArray())[0];
-            template.update(PostQueries.createSingle, userId, currentTime, forumId, postId, post.getMessage(),
+            template.update(PostQueries.createSingle, userId, userId, currentTime, forumId, forumId, postId, post.getMessage(),
                     parentId, threadId, array, postId, root);
 
         }

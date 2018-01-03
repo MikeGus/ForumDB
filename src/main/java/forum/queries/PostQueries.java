@@ -6,6 +6,7 @@ package forum.queries;
 
 public class PostQueries {
 
+    @Deprecated
     public static String create(final Integer numberOfPosts) {
 
         StringBuilder builder = new StringBuilder(
@@ -23,17 +24,15 @@ public class PostQueries {
     }
 
     public static String createSingle = "INSERT INTO posts " +
-            "(user_id, created, forum_id, id, message, parent_id, thread_id, path, root_id) " +
-            "VALUES ( ?, ?::TIMESTAMPTZ, ?, ?, ?, ?, ?, array_append(?, ?::BIGINT), ?)";
+            "(user_id, user_nickname, created, forum_id, forum_slug, id, message, parent_id, thread_id, path, root_id) " +
+            "VALUES (?, (SELECT nickname FROM users WHERE id = ?), ?::TIMESTAMPTZ, ?," +
+            "(SELECT slug FROM forums WHERE id = ?), ?, ?, ?, ?, array_append(?, ?::BIGINT), ?)";
 
     public static String update = "UPDATE posts SET message = ?, is_edited = TRUE WHERE id = ?";
 
     public static String getById =
-            "SELECT u.nickname, p.created, f.slug, p.id, p.is_edited, p.message, p.parent_id, p.thread_id " +
-                "FROM posts p " +
-                "JOIN users u ON (p.user_id = u.id) " +
-                "JOIN forums f ON (p.forum_id = f.id) " +
-                "WHERE p.id = ?";
+            "SELECT user_nickname AS nickname, created, forum_slug AS slug, id, is_edited, message, parent_id, thread_id " +
+                "FROM posts WHERE id = ?";
 
     public static String status = "SELECT COUNT(*) FROM posts";
 

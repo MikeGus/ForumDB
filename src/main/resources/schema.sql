@@ -83,8 +83,10 @@ CREATE INDEX threads_forum_idx ON threads(forum_id);
 
 CREATE TABLE IF NOT EXISTS posts (
   user_id   INTEGER     REFERENCES users(id)  ON DELETE CASCADE NOT NULL,
+  user_nickname  CITEXT                                         NOT NULL,
   created   TIMESTAMPTZ DEFAULT now()                           NOT NULL,
   forum_id    INTEGER     REFERENCES forums(id) ON DELETE CASCADE NOT NULL,
+  forum_slug  CITEXT                                            NOT NULL,
   id        BIGSERIAL   PRIMARY KEY,
   is_edited BOOLEAN     NOT NULL DEFAULT FALSE,
   message   TEXT                                                NOT NULL,

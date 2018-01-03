@@ -18,19 +18,17 @@ public class ForumQueries {
     public static String clear = "TRUNCATE forums CASCADE";
 
     public static String getThreads(final Integer limit, final String since, final Boolean desc) {
-        StringBuilder builder = new StringBuilder("SELECT u.nickname AS author, t.created, f.slug AS forum, ");
-        builder.append("t.id, t.message, t.slug, t.title, t.votes ");
-        builder.append("FROM threads t JOIN users u ON (t.user_id = u.id) ");
-        builder.append("JOIN forums f ON (f.id = t.forum_id) ");
-        builder.append("WHERE LOWER(f.slug) = LOWER(?) ");
+        StringBuilder builder = new StringBuilder("SELECT user_nickname AS author, created, forum_slug AS forum, ");
+        builder.append("id, message, slug, title, votes ");
+        builder.append("FROM threads WHERE LOWER(forum_slug) = LOWER(?) ");
 
         String sign = (desc == Boolean.TRUE ? "<= " : ">= ");
 
         if (since != null) {
-            builder.append("AND t.created ").append(sign).append("?::TIMESTAMPTZ ");
+            builder.append("AND created ").append(sign).append("?::TIMESTAMPTZ ");
         }
 
-        builder.append("ORDER BY t.created ");
+        builder.append("ORDER BY created ");
 
         if (desc == Boolean.TRUE) {
             builder.append("DESC ");

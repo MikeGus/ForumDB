@@ -59,10 +59,9 @@ public class ThreadQueries {
 
     public static String getPostsFlat(final Integer limit, final Integer since, final Boolean desc ) {
 
-        StringBuilder builder = new StringBuilder("SELECT u.nickname, p.created, f.slug, p.id, p.is_edited,");
+        StringBuilder builder = new StringBuilder("SELECT p.user_nickname AS nickname, p.created, p.forum_slug AS slug, p.id, p.is_edited,");
         builder.append(" p.message, p.parent_id, p.thread_id ");
-        builder.append("FROM users u JOIN posts p ON (u.id = p.user_id) ");
-        builder.append("JOIN forums f ON (f.id = p.forum_id) ");
+        builder.append("FROM posts p ");
         builder.append("WHERE p.thread_id = ? ");
 
         String order = (desc == Boolean.TRUE ? " DESC " : " ASC ");
@@ -82,10 +81,9 @@ public class ThreadQueries {
 
     public static String getPostsTree(final Integer limit, final Integer since, final Boolean desc ) {
 
-        StringBuilder builder = new StringBuilder("SELECT u.nickname, p.created, f.slug, p.id, p.is_edited,");
+        StringBuilder builder = new StringBuilder("SELECT p.user_nickname AS nickname, p.created, p.forum_slug AS slug, p.id, p.is_edited,");
         builder.append(" p.message, p.parent_id, p.thread_id ");
-        builder.append("FROM users u JOIN posts p ON (u.id = p.user_id) ");
-        builder.append("JOIN forums f ON (f.id = p.forum_id) ");
+        builder.append("FROM posts p ");
         builder.append("WHERE p.thread_id = ? ");
 
         String order = (desc == Boolean.TRUE ? " DESC " : " ASC ");
@@ -108,10 +106,9 @@ public class ThreadQueries {
         String order = (desc == Boolean.TRUE ? " DESC " : " ASC ");
         String sign = (desc == Boolean.TRUE ? " < " : " > ");
 
-        StringBuilder builder = new StringBuilder("SELECT u.nickname, p.created, f.slug, p.id, p.is_edited,");
+        StringBuilder builder = new StringBuilder("SELECT p.user_nickname AS nickname, p.created, p.forum_slug AS slug, p.id, p.is_edited,");
         builder.append(" p.message, p.parent_id, p.thread_id ");
-        builder.append("FROM users u JOIN posts p ON (u.id = p.user_id) ");
-        builder.append("JOIN forums f ON (f.id = p.forum_id) ");
+        builder.append("FROM posts p ");
         builder.append("WHERE p.root_id IN (SELECT id FROM posts WHERE thread_id = ? AND parent_id=0 ");
 
         if (since != null) {
