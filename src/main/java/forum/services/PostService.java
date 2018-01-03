@@ -14,8 +14,6 @@ import java.sql.Array;
 import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -52,25 +50,16 @@ public class PostService {
 
         String currentTime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 
-        List<Object> params = new ArrayList<>();
-
         for (PostModel post : posts) {
 
+            Integer postId = template.queryForObject(PostQueries.getNextId, Integer.class);
+            post.setId(postId);
             post.setForum(forumSlug);
             post.setThread(threadId);
             post.setCreated(currentTime);
 
-            Integer user_id = template.queryForObject(UserQueries.getIdByNickname, Integer.class, post.getAuthor());
-            params.add(user_id);
-            params.add(currentTime);
-            params.add(forumId);
+            Integer userId = template.queryForObject(UserQueries.getIdByNickname, Integer.class, post.getAuthor());
 
-            Integer postId = template.queryForObject(PostQueries.getNextId, Integer.class);
-            post.setId(postId);
-
-            params.add(postId);
-
-            params.add(post.getMessage());
             Integer parentId = 0;
             if (post.getParent() != null && post.getParent() != 0) {
                 try {
@@ -80,25 +69,17 @@ public class PostService {
                     throw new NoSuchElementException("Parent not found!");
                 }
             }
-            post.setParent(parentId);
-            params.add(parentId);
-            params.add(threadId);
 
-            if (parentId == 0) {
-                params.add(null);
-                params.add(postId);
-                params.add(postId);
-            }
-            else {
-                Array array = template.queryForObject(PostQueries.getPath, Array.class, parentId);
-                params.add(array);
-                params.add(postId);
-                params.add(((Long[]) array.getArray())[0]);
-            }
+            post.setParent(parentId);
+
+            Array array = (parentId == 0) ? null : template.queryForObject(PostQueries.getPath, Array.class, parentId);
+
+            Long root = (parentId == 0) ? postId : ((Long[]) array.getArray())[0];
+            template.update(PostQueries.createSingle, userId, currentTime, forumId, postId, post.getMessage(),
+                    parentId, threadId, array, postId, root);
 
         }
 
-        template.update(PostQueries.create(posts.size()), params.toArray());
         template.update(PostQueries.updatePostCount, posts.size(), forumId);
 
         return posts;
@@ -109,7 +90,7 @@ public class PostService {
         PostModel post = template.queryForObject(PostQueries.getById, readPost, id);
         PostFullModel result = new PostFullModel(null, null, null, null);
         result.setPost(post);
-        
+
         if (related != null) {
             for (String elem : related) {
                 switch (elem) {

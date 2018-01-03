@@ -22,6 +22,10 @@ public class PostQueries {
         return builder.toString();
     }
 
+    public static String createSingle = "INSERT INTO posts " +
+            "(user_id, created, forum_id, id, message, parent_id, thread_id, path, root_id) " +
+            "VALUES ( ?, ?::TIMESTAMPTZ, ?, ?, ?, ?, ?, array_append(?, ?::BIGINT), ?)";
+
     public static String update = "UPDATE posts SET message = ?, is_edited = TRUE WHERE id = ?";
 
     public static String getById =

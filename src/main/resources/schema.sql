@@ -18,6 +18,18 @@ CREATE TABLE IF NOT EXISTS users (
   nickname  CITEXT  UNIQUE
 );
 
+DROP INDEX IF EXISTS users_id_idx;
+CREATE INDEX users_id_idx ON users(id);
+
+DROP INDEX IF EXISTS users_nickname_idx;
+CREATE INDEX users_nickname_idx ON users(LOWER(nickname));
+
+DROP INDEX IF EXISTS users_nick_idx;
+CREATE INDEX users_nick_idx ON users(nickname);
+
+DROP INDEX IF EXISTS users_email_idx;
+CREATE INDEX users_email_idx ON users(LOWER(email));
+
 CREATE TABLE IF NOT EXISTS forums (
   id      SERIAL  PRIMARY KEY,
   posts   BIGINT  DEFAULT 0,
@@ -26,6 +38,16 @@ CREATE TABLE IF NOT EXISTS forums (
   title   TEXT                 NOT NULL,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL
 );
+
+DROP INDEX IF EXISTS forums_id_idx;
+CREATE INDEX forums_id_idx ON forums(id);
+
+DROP INDEX IF EXISTS forums_slug_user_idx;
+CREATE INDEX forums_slug_user_idx ON forums(LOWER(slug), user_id);
+
+DROP INDEX IF EXISTS forums_user_idx;
+CREATE INDEX forums_user_idx ON forums(user_id);
+
 
 CREATE TABLE IF NOT EXISTS threads (
   user_id   INTEGER       REFERENCES users(id)  ON DELETE CASCADE NOT NULL,
@@ -38,6 +60,20 @@ CREATE TABLE IF NOT EXISTS threads (
   votes     INTEGER       DEFAULT 0
 );
 
+DROP INDEX IF EXISTS threads_id_idx;
+CREATE INDEX threads_id_idx ON threads(id);
+
+DROP INDEX IF EXISTS threads_slug_idx;
+CREATE INDEX threads_slug_idx ON threads(LOWER(slug));
+
+DROP INDEX IF EXISTS threads_user_idx;
+CREATE INDEX threads_user_idx ON threads(user_id);
+
+DROP INDEX IF EXISTS threads_created_idx;
+CREATE INDEX threads_created_idx ON threads(created);
+
+DROP INDEX IF EXISTS threads_forum_idx;
+CREATE INDEX threads_forum_idx ON threads(forum_id);
 
 CREATE TABLE IF NOT EXISTS posts (
   user_id   INTEGER     REFERENCES users(id)  ON DELETE CASCADE NOT NULL,
@@ -52,6 +88,26 @@ CREATE TABLE IF NOT EXISTS posts (
   root_id   BIGINT      NOT NULL
 );
 
+DROP INDEX IF EXISTS posts_id_idx;
+CREATE INDEX posts_id_idx ON posts(id);
+
+DROP INDEX IF EXISTS posts_user_idx;
+CREATE INDEX posts_user_idx ON posts(user_id);
+
+DROP INDEX IF EXISTS posts_forum_idx;
+CREATE INDEX posts_forum_idx ON posts(forum_id);
+
+DROP INDEX IF EXISTS posts_flat_idx;
+CREATE INDEX posts_flat_idx ON posts(id, thread_id);
+
+DROP INDEX IF EXISTS posts_tree_idx;
+CREATE INDEX posts_tree_idx ON posts(thread_id, path);
+
+DROP INDEX IF EXISTS posts_thread_parent_idx;
+CREATE INDEX posts_thread_parent_idx ON posts(thread_id, parent_id);
+
+DROP INDEX IF EXISTS posts_parent_tree_idx;
+CREATE INDEX posts_parent_tree_idx ON posts(root_id, path, id);
 
 CREATE TABLE IF NOT EXISTS votes (
   user_id   INTEGER     REFERENCES users(id)   ON DELETE CASCADE NOT NULL,
@@ -59,3 +115,6 @@ CREATE TABLE IF NOT EXISTS votes (
   voice     SMALLINT     DEFAULT 0,
   UNIQUE (user_id, thread_id)
 );
+
+DROP INDEX IF EXISTS votes_user_thread_idx;
+CREATE INDEX votes_user_thread_idx ON votes(user_id, thread_id);
