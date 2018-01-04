@@ -1,12 +1,10 @@
 package forum.services;
 
 import forum.models.*;
-import forum.queries.ThreadQueries;
-import forum.queries.UserQueries;
+import forum.queries.*;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,6 @@ import static forum.rowmappers.RowMapperCollection.readThread;
  * Created by MikeGus on 15.10.17
  */
 
-@Transactional
 @Service
 public class ThreadService {
 
@@ -32,6 +29,9 @@ public class ThreadService {
         Integer id = template.queryForObject(ThreadQueries.create, Integer.class,
                 thread.getAuthor(), thread.getAuthor(), thread.getCreated(), slug, slug, thread.getMessage(), thread.getSlug(), thread.getTitle());
         template.update(ThreadQueries.updateThreadCount, 1, thread.getForum());
+        Integer userId = template.queryForObject(UserQueries.getIdByNickname, Integer.class, thread.getAuthor());
+        Integer forumId = template.queryForObject(ForumQueries.getIdBySlug, Integer.class, slug);
+        template.update(ForumVisitorsQueries.addUserToForumVisitors, userId, forumId);
         return template.queryForObject(ThreadQueries.getById, readThread, id);
     }
 

@@ -127,4 +127,34 @@ public class ThreadQueries {
 
         return builder.toString();
     }
+//public static String getPostsParentTree(final Integer limit, final Integer since, final Boolean desc ) {
+//
+//    String order = (desc == Boolean.TRUE ? " DESC " : " ASC ");
+//    String sign = (desc == Boolean.TRUE ? " < " : " > ");
+//
+//    StringBuilder builder = new StringBuilder("SELECT p.user_nickname AS nickname, p.created, p.forum_slug AS slug, p.id, p.is_edited,");
+//    builder.append(" p.message, p.parent_id, p.thread_id ");
+//    builder.append("FROM posts p JOIN posts p2 ON (p.root_id = p2.id) ");
+//    builder.append("WHERE p2.thread_id = ? AND p2.parent_id=0 ");
+//    if (since != null || limit != null) {
+//        builder.append(" AND p2.id ").append(sign).append("? ");
+//    }
+//
+//    builder.append("ORDER BY p.path ").append(order);
+//
+//    return builder.toString();
+//}
+//
+//public static String getOldestParentPostParentTree(final Integer since, final Boolean desc) {
+//    String sign = (desc == Boolean.TRUE ? " < " : " > ");
+//    String func = (desc == Boolean.TRUE ? "MAX(" : "MIN(");
+//    StringBuilder builder = new StringBuilder("SELECT ").append(func).append("id) FROM posts " +
+//            "WHERE thread_id = ? AND parent_id = 0 ");
+//    if (since != null) {
+//        builder.append("AND path ").append(sign).append(" ? ");
+//    }
+//    builder.append("LIMIT ?");
+//    return builder.toString();
+//}
+
 }

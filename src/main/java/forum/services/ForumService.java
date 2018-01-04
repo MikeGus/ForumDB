@@ -5,6 +5,7 @@ import forum.models.ThreadModel;
 import forum.models.UserModel;
 import forum.queries.ForumQueries;
 
+import forum.queries.ForumVisitorsQueries;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,10 @@ public class ForumService {
         template.execute(ForumQueries.clear);
     }
 
+    public void clearVisitors() {
+        template.execute(ForumVisitorsQueries.clear);
+    }
+
     public List<ThreadModel> getThreads(final String slug, final Integer limit, final String since, final Boolean desc) {
 
         List<Object> args = new ArrayList<>();
@@ -63,20 +68,6 @@ public class ForumService {
     public List<UserModel> getUsers(final String slug, final Integer limit, final String since, final Boolean desc) {
 
         Integer forumId = template.queryForObject(ForumQueries.getIdBySlug, Integer.class, slug);
-
-        List<Object> args = new ArrayList<>();
-        for (int i = 0; i < 2; ++i) {
-            args.add(forumId);
-            if (since != null) {
-                args.add(since);
-            }
-        }
-
-        if (limit != null) {
-            args.add(limit);
-        }
-
-        return template.query(ForumQueries.getUsers(limit, since, desc),
-                args.toArray(), readUser);
+        return template.query(ForumQueries.getUsers(limit, since, desc), readUser, forumId);
     }
 }

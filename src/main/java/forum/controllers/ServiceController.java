@@ -40,6 +40,7 @@ public class ServiceController {
         forumService.clear();
         postService.clear();
         threadService.clear();
+        forumService.clearVisitors();
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 

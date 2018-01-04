@@ -5,13 +5,11 @@ import forum.models.UserUpdateModel;
 import forum.queries.UserQueries;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static forum.rowmappers.RowMapperCollection.readUser;
 
-@Transactional
 @Service
 public class UserService {
 
@@ -27,11 +25,6 @@ public class UserService {
 
     public UserModel getByNickname(final String nickname) {
         return template.queryForObject(UserQueries.getByNickname, readUser, nickname);
-    }
-
-    public UserModel getByNicknameOrEmail(final String nicknameOrEmail) {
-        return template.queryForObject(UserQueries.getByNicknameOrEmail,
-                readUser, nicknameOrEmail, nicknameOrEmail);
     }
 
     public List<UserModel> getByNicknameOrEmail(final String nickname, final String email) {

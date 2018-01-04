@@ -42,32 +42,19 @@ public class ForumQueries {
     }
 
     public static String getUsers(final Integer limit, final String since, final Boolean desc) {
-        StringBuilder builder = new StringBuilder("SELECT about, email, fullname, nickname ");
-        builder.append("FROM users u JOIN posts p ON (u.id = p.user_id) ");
-        builder.append("JOIN forums f ON (p.forum_id = f.id) ");
-        builder.append("WHERE f.id = ? ");
-
-        String nicknameCheck = ("AND LOWER(nickname) ");
         String sign = (desc == Boolean.TRUE ? "< " : "> ");
         String descExp = (desc == Boolean.TRUE ? "DESC " : "ASC ");
-        String limitExp = (limit == null ? "" : "LIMIT ?");
 
+        StringBuilder builder = new StringBuilder("SELECT about, email, fullname, nickname ");
+        builder.append("FROM users u JOIN forum_visitors f ON (u.id = f.user_id) ");
+        builder.append(" WHERE f.forum_id = ? ");
         if (since != null) {
-            builder.append(nicknameCheck).append(sign).append("LOWER(?) ");
+            builder.append(" AND nickname ").append(sign).append("'").append(String.valueOf(since)).append("' ");
         }
-
-        builder.append("UNION ").append("SELECT about, email, fullname, nickname ");
-        builder.append("FROM users us JOIN threads th ON (us.id = th.user_id) ");
-        builder.append("JOIN forums fo ON (th.forum_id = fo.id) ");
-        builder.append("WHERE fo.id = ? ");
-
-        if (since != null) {
-            builder.append(nicknameCheck).append(sign).append("LOWER(?) ");
+        builder.append(" ORDER BY nickname ").append(descExp);
+        if (limit != null) {
+            builder.append("LIMIT ").append(String.valueOf(limit));
         }
-
-        builder.append("ORDER BY nickname ");
-        builder.append(descExp);
-        builder.append(limitExp);
 
         return builder.toString();
     }

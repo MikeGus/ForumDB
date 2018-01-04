@@ -46,13 +46,4 @@ public class RowMapperCollection {
         new ForumModel(rs.getInt("posts"), rs.getString("slug"),
                 rs.getInt("threads"), rs.getString("title"),
                 rs.getString("user"));
-
-    public static RowMapper<PostModel> readPostData = (rs, i) -> {
-        final Timestamp ts = rs.getTimestamp("created");
-        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        return new PostModel(null, df.format(ts), null,
-                rs.getInt("id"), Boolean.FALSE, null, null, null);
-    };
 }

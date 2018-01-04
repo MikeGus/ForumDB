@@ -1,14 +1,10 @@
 package forum.services;
 
 import forum.models.*;
-import forum.queries.ForumQueries;
-import forum.queries.PostQueries;
-import forum.queries.ThreadQueries;
-import forum.queries.UserQueries;
+import forum.queries.*;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Array;
 import java.sql.SQLException;
@@ -24,7 +20,6 @@ import static forum.rowmappers.RowMapperCollection.*;
  */
 
 @SuppressWarnings("ConstantConditions")
-@Transactional
 @Service
 public class PostService {
 
@@ -77,6 +72,8 @@ public class PostService {
             Long root = (parentId == 0) ? postId : ((Long[]) array.getArray())[0];
             template.update(PostQueries.createSingle, userId, userId, currentTime, forumId, forumId, postId, post.getMessage(),
                     parentId, threadId, array, postId, root);
+
+            template.update(ForumVisitorsQueries.addUserToForumVisitors, userId, forumId);
 
         }
 
